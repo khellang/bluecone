@@ -13,7 +13,7 @@ namespace BlueCone.Utils
             {
                 FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
                 fs.Seek(-125, SeekOrigin.End);
-                byte[] buffer = new byte[30];
+                byte[] buffer = new byte[30]; // Kanskje det er best å ha denne static?
                 fs.Read(buffer, 0, 30);
                 string title = new string(Encoding.UTF8.GetChars(buffer)).Trim();
                 fs.Read(buffer, 0, 30);

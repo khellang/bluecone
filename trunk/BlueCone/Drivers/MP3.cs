@@ -17,16 +17,17 @@ namespace BlueCone.Drivers
         // Values
         const ushort SM_SDINEW = 0x800;
         const ushort SM_RESET = 0x04;
+        const ushort SM_CANCEL = 0x08;
 
         // Registers
         const int SCI_MODE = 0x00;
         const int SCI_VOL = 0x0B;
         const int SCI_CLOCKF = 0x03;
 
-        static private byte[] block = new byte[32];
-        static private byte[] cmdBuffer = new byte[4];
+        private static byte[] block = new byte[32];
+        private static byte[] cmdBuffer = new byte[4];
 
-        static public void Initialize()
+        public static void Initialize()
         {
             SPI.SPI_module spi_module;
             spi_module = SPI.SPI_module.SPI1;
@@ -54,8 +55,7 @@ namespace BlueCone.Drivers
 
         }
 
-
-        static public void SetVolume(byte left_channel, byte right_channel)
+        public static void SetVolume(byte left_channel, byte right_channel)
         {
             CommandWrite(SCI_VOL, (ushort)((255 - left_channel) << 8 | (255 - right_channel)));
         }
@@ -69,7 +69,7 @@ namespace BlueCone.Drivers
             Thread.Sleep(100);
         }
 
-        static private void CommandWrite(byte address, ushort data)
+        private static void CommandWrite(byte address, ushort data)
         {
             while (DREQ.Read() == false)
                 Thread.Sleep(1);
@@ -84,7 +84,7 @@ namespace BlueCone.Drivers
 
         }
 
-        static private ushort CommandRead(byte address)
+        private static ushort CommandRead(byte address)
         {
             ushort temp;
 
@@ -107,7 +107,7 @@ namespace BlueCone.Drivers
             return temp;
         }
 
-        static public void SendData(byte[] data)
+        public static void SendData(byte[] data)
         {
             int size = data.Length - data.Length % 32;
 
