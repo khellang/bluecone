@@ -42,6 +42,7 @@
     <Compile Include="Utils\BlockingQueue.cs" />
     <Compile Include="Utils\ID3Reader.cs" />
     <Compile Include="Utils\Playlist.cs" />
+    <Compile Include="Utils\PriorityQueue.cs" />
     <Compile Include="Utils\QueueItem.cs" />
   </ItemGroup>
   <ItemGroup>
