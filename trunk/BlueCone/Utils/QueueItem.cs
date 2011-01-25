@@ -26,6 +26,13 @@ namespace BlueCone.Utils
         }
 #endregion
 
+        #region methods
+
+        public override string ToString()
+        {
+            return path;
+        }
+
         public int Compare(Object obj)
         {
             if (obj is QueueItem)
@@ -40,7 +47,9 @@ namespace BlueCone.Utils
             }
             else
                 throw new ArgumentException("object is not a QueueItem");
-           
+
         }
+        #endregion
+
     }
 }
