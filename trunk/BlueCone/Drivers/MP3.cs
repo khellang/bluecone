@@ -4,7 +4,7 @@ using Microsoft.SPOT.Hardware;
 using GHIElectronics.NETMF.FEZ;
 using Microsoft.SPOT;
 
-namespace BlueCone
+namespace BlueCone.Drivers
 {
     static public class MP3
     {
