@@ -3,8 +3,7 @@ using Microsoft.SPOT;
 
 namespace BlueCone.Utils
 {
-    public class PlaylistQueue
+    public class QueueItem
     {
-
     }
 }
