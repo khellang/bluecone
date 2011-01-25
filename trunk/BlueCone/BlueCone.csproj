@@ -41,6 +41,7 @@
     </Compile>
     <Compile Include="Utils\BlockingQueue.cs" />
     <Compile Include="Utils\ID3Reader.cs" />
+    <Compile Include="Utils\PlaylistQueue.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FEZDomino_GHIElectronics.NETMF.FEZ, Version=4.1.1.0, Culture=neutral, processorArchitecture=MSIL">
