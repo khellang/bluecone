@@ -15,11 +15,11 @@ namespace BlueCone.Utils
                 fs.Seek(-125, SeekOrigin.End);
                 byte[] buffer = new byte[30];
                 fs.Read(buffer, 0, 30);
-                string title = new string(Encoding.UTF8.GetChars(buffer));
+                string title = new string(Encoding.UTF8.GetChars(buffer)).Trim();
                 fs.Read(buffer, 0, 30);
-                string artist = new string(Encoding.UTF8.GetChars(buffer));
+                string artist = new string(Encoding.UTF8.GetChars(buffer)).Trim();
                 fs.Read(buffer, 0, 30);
-                string album = new string(Encoding.UTF8.GetChars(buffer));
+                string album = new string(Encoding.UTF8.GetChars(buffer)).Trim();
                 fs.Close();
                 return new string[] { artist, title, album };
             }
