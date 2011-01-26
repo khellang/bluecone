@@ -1,12 +1,23 @@
 using System;
 using Microsoft.SPOT;
 
+//-----------------------------------------------------------------------
+//  BlueCone Bacheloroppgave Våren 2011
+//      Av Terje Knutsen, Stein Arild Høiland og Kristian Hellang
+//-----------------------------------------------------------------------
+
 namespace BlueCone.Utils
 {
     public class QueueItem : IComparable
     {
+        #region Fields
+
         private string path;
         private int priority;
+
+        #endregion
+
+        #region Ctor
 
         public QueueItem(string path, int priority)
         {
@@ -14,19 +25,23 @@ namespace BlueCone.Utils
             this.priority = priority;
         }
 
-        #region getters
+        #endregion
+
+        #region Properties
+
         public int Priority
         {
-            get { return priority;}
+            get { return priority; }
         }
 
-        public string PATH
+        public string Path
         {
             get { return path; }
         }
-#endregion
 
-        #region methods
+        #endregion
+
+        #region Methods
 
         public override string ToString()
         {
@@ -47,9 +62,8 @@ namespace BlueCone.Utils
             }
             else
                 throw new ArgumentException("object is not a QueueItem");
-
         }
-        #endregion
 
+        #endregion
     }
 }

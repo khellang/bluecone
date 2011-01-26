@@ -10,6 +10,11 @@ using System.Text;
 using System.IO.Ports;
 using BlueCone.Drivers;
 
+//-----------------------------------------------------------------------
+//  BlueCone Bacheloroppgave Våren 2011
+//      Av Terje Knutsen, Stein Arild Høiland og Kristian Hellang
+//-----------------------------------------------------------------------
+
 namespace BlueCone
 {
     public class Program
