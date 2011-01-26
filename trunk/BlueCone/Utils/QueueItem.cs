@@ -48,7 +48,7 @@ namespace BlueCone.Utils
             return path;
         }
 
-        public int Compare(Object obj)
+        public int CompareTo(Object obj)
         {
             if (obj is QueueItem)
             {

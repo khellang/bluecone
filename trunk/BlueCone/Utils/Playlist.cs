@@ -14,6 +14,7 @@ namespace BlueCone.Utils
         #region Fields
 
         private Hashtable myTable;
+        private PriorityQueue thePlaylist;
         private const int STARTPRIORITY = 0;
         private static int priorityValue;
 
@@ -35,11 +36,20 @@ namespace BlueCone.Utils
         public void Clear()
         {
             myTable = new Hashtable();
+            thePlaylist = new PriorityQueue();
         }
 
         public void Enqueue(string path, string MACAddress)
         {
             MACRegistered(MACAddress);
+            GetPriority(MACAddress);
+            thePlaylist.Add(new QueueItem(path, priorityValue));
+        }
+
+        public string Dequeue()
+        {
+            string tmp = thePlaylist.Remove().ToString();
+            return tmp;
         }
 
         #endregion
@@ -57,11 +67,11 @@ namespace BlueCone.Utils
             }
         }
 
-        private int GetPriority(string MACAddress)
+        private void GetPriority(string MACAddress)
         {
             priorityValue = (int)myTable[MACAddress];
             myTable[MACAddress] = priorityValue + 1;
-            return priorityValue;
+    //        return priorityValue;
         }
 
         #endregion
