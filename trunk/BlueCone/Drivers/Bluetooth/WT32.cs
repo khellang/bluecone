@@ -2,6 +2,11 @@ using System;
 using Microsoft.SPOT;
 using System.Text;
 
+//-----------------------------------------------------------------------
+//  BlueCone Bacheloroppgave Våren 2011
+//      Av Terje Knutsen, Stein Arild Høiland og Kristian Hellang
+//-----------------------------------------------------------------------
+
 namespace BlueCone.Drivers
 {
     public static class WT32
