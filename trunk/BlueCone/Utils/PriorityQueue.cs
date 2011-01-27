@@ -58,6 +58,7 @@ namespace BlueCone.Utils
             BubbleUp();
         }
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public QueueItem Remove()
         {
             if (count < 0)
@@ -65,6 +66,16 @@ namespace BlueCone.Utils
             QueueItem tmp = theQueue[count];
             theQueue[count] = null;
             count--;
+            return tmp;
+        }
+
+        public string[] getQueue()
+        {
+            string[] tmp = new string[count + 1];
+            for (int i = count; i >= 0; i--)
+            {
+                tmp[count - i] = theQueue[i].Path;
+            }
             return tmp;
         }
 

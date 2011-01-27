@@ -4,7 +4,7 @@ using System.Text;
 
 namespace BlueCone.Drivers
 {
-    public static class Bluetooth
+    public static class WT32
     {
 
 

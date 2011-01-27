@@ -52,6 +52,11 @@ namespace BlueCone.Utils
             return tmp;
         }
 
+        public string[] GetPlaylist()
+        {
+            return thePlaylist.getQueue();
+        }
+
         #endregion
 
         #region Private Methods
@@ -69,9 +74,9 @@ namespace BlueCone.Utils
 
         private void GetPriority(string MACAddress)
         {
-            priorityValue = (int)myTable[MACAddress];
+            priorityValue = (int)myTable[MACAddress]; // **Prøver med static variabel her mtp. garbage collector, må kanskje endres**
             myTable[MACAddress] = priorityValue + 1;
-    //        return priorityValue;
+    //        return priorityValue;   
         }
 
         #endregion
