@@ -23,6 +23,7 @@ namespace BlueCone.Drivers.Bluetooth
         private static SerialPort bluetooth;
         private static byte[] receiveBuffer;
         private static byte[] sendBuffer;
+        private static BluetoothMessage receivedMessage;
 
         public static event MessageReceivedEventHandler MessageReceived;
 
@@ -58,27 +59,35 @@ namespace BlueCone.Drivers.Bluetooth
 
         #region Private Methods
 
+        // TODO: Test med statiske variabler
+        static byte SOF;
+        static byte link;
+        static int length;
+        static string message;
+
         private static void DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            byte SOF = ReadByte(); // Read byte
+            SOF = ReadByte(); // Read byte
             if (SOF == 0xBF) // Check for SOF
             {
-                byte link = ReadByte(); // Read link
+                link = ReadByte(); // Read link
                 ReadByte(); // Read flags - not used
-                int length = (int)ReadByte(); // Read data length
+                length = (int)ReadByte(); // Read data length
                 receiveBuffer = new byte[length];
                 bluetooth.Read(receiveBuffer, 0, receiveBuffer.Length); // Read data
-                string message = new string(Encoding.UTF8.GetChars(receiveBuffer)).Trim();
+                message = new string(Encoding.UTF8.GetChars(receiveBuffer)).Trim();
+                receivedMessage = new BluetoothMessage((Link)link, message);
                 if (MessageReceived != null)
-                    MessageReceived(new BluetoothMessage());
+                    MessageReceived(receivedMessage);
+                bluetooth.DiscardInBuffer();
             }
         }
 
         private static byte ReadByte()
         {
-            byte[] buffer = new byte[1];
-            bluetooth.Read(buffer, 0, 1);
-            return buffer[0];
+            receiveBuffer = new byte[1];
+            bluetooth.Read(receiveBuffer, 0, 1);
+            return receiveBuffer[0];
         }
 
         #endregion

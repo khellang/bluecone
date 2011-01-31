@@ -16,6 +16,8 @@ namespace BlueCone
 {
     public class Program
     {
+        private static string[] tmp;
+
         public static void Main() 
         {
             WT32.Initialize();
@@ -25,7 +27,7 @@ namespace BlueCone
 
         static void WT32_MessageReceived(BluetoothMessage message)
         {
-            string[] tmp = message.Command.Split(' ');
+            tmp = message.Command.Split(' ');
             switch (tmp[0])
             {
                 case "RING":
