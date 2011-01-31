@@ -30,7 +30,7 @@
   </PropertyGroup>
   <Import Project="$(NetMfTargetsBaseDir)$(TargetFrameworkVersion)\CSharp.Targets" />
   <ItemGroup>
-    <Compile Include="Drivers\Bluetooth\MUXFrame.cs" />
+    <Compile Include="Drivers\Bluetooth\Multiplexing.cs" />
     <Compile Include="Drivers\VS1053.cs" />
     <Compile Include="Drivers\Bluetooth\WT32.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
