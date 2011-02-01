@@ -6,7 +6,7 @@ using Microsoft.SPOT;
 //      Av Terje Knutsen, Stein Arild Høiland og Kristian Hellang
 //-----------------------------------------------------------------------
 
-namespace BlueCone.Drivers.Bluetooth
+namespace BlueCone.Bluetooth
 {
     /// <summary>
     /// This class represents a message to be sent to either a bluetooth link or the module itself.

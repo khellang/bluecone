@@ -3,13 +3,14 @@ using Microsoft.SPOT;
 using System.Text;
 using System.IO.Ports;
 using System.Threading;
+using System.Collections;
 
 //-----------------------------------------------------------------------
 //  BlueCone Bacheloroppgave Våren 2011
 //      Av Terje Knutsen, Stein Arild Høiland og Kristian Hellang
 //-----------------------------------------------------------------------
 
-namespace BlueCone.Drivers.Bluetooth
+namespace BlueCone.Bluetooth
 {
     #region Delegates
 
@@ -26,6 +27,7 @@ namespace BlueCone.Drivers.Bluetooth
 
         private static SerialPort bluetooth;
         private static byte[] sendBuffer;
+        private static Hashtable connections;
 
         public static event MessageReceivedEventHandler MessageReceived;
 
@@ -43,6 +45,7 @@ namespace BlueCone.Drivers.Bluetooth
             bluetooth = new SerialPort("COM1", 115200, Parity.None, 8, StopBits.One);
             bluetooth.Open();
             bluetooth.DataReceived += new SerialDataReceivedEventHandler(DataReceived);
+            connections = new Hashtable(7);
             Debug.Print("WT32 Initialized.");
         }
 
@@ -139,10 +142,19 @@ namespace BlueCone.Drivers.Bluetooth
             string[] tmp = command.Split('|');
             switch (tmp[0])
             {
-                    // TODO: Implementer resten av denne metoden.
-                default:
-                    Debug.Print(command);
+                case "RING": // Enhet tilkoblet.
+                    Link newLink = (Link)Convert.ToByte(tmp[1]);
+                    Connection newConnection = new Connection(tmp[2], newLink);
+                    connections.Add(newLink, newConnection);
+                    Debug.Print("Tilkobling fra " + newConnection.Address + ", Link: " + newConnection.Link);
                     break;
+                case "NO": // Enhet frakoblet.
+                    Debug.Print("Link " + tmp[2] + " frakoblet.");
+                    break;
+                case "NAME": // Mottatt "friendlyname"
+                    Debug.Print("Friendly name of " + tmp[1] + " is " + tmp[2]);
+                    break;
+                    // TODO: Implementer resten av denne metoden.
             }
         }
 

@@ -6,9 +6,12 @@ using Microsoft.SPOT;
 //      Av Terje Knutsen, Stein Arild Høiland og Kristian Hellang
 //-----------------------------------------------------------------------
 
-namespace BlueCone.Utils
+namespace BlueCone.Mp3
 {
-    public class BlockingQueue
+    /// <summary>
+    /// This class is the main BlueCone music player.
+    /// </summary>
+    public class BlueConePlayer
     {
         #region Fields
 
@@ -18,7 +21,7 @@ namespace BlueCone.Utils
 
         #region Ctor
 
-        public BlockingQueue()
+        public BlueConePlayer()
         {
 
         }

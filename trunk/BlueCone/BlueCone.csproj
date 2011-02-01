@@ -34,11 +34,12 @@
   </PropertyGroup>
   <Import Project="$(NetMfTargetsBaseDir)$(TargetFrameworkVersion)\CSharp.Targets" />
   <ItemGroup>
-    <Compile Include="Drivers\Bluetooth\BluetoothMessage.cs" />
-    <Compile Include="Drivers\Bluetooth\Connection.cs" />
-    <Compile Include="Drivers\Bluetooth\Multiplexing.cs" />
-    <Compile Include="Drivers\VS1053.cs" />
-    <Compile Include="Drivers\Bluetooth\WT32.cs" />
+    <Compile Include="Bluetooth\BluetoothMessage.cs" />
+    <Compile Include="Bluetooth\Connection.cs" />
+    <Compile Include="Bluetooth\Multiplexing.cs" />
+    <Compile Include="Mp3\BlueConePlayer.cs" />
+    <Compile Include="Mp3\VS1053.cs" />
+    <Compile Include="Bluetooth\WT32.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Resources.Designer.cs">
@@ -46,9 +47,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Utils\BlockingQueue.cs" />
-    <Compile Include="Utils\ID3Reader.cs" />
-    <Compile Include="Utils\Playlist.cs" />
+    <Compile Include="Utils\ID3TagReader.cs" />
+    <Compile Include="Mp3\Playlist.cs" />
     <Compile Include="Utils\PriorityQueue.cs" />
     <Compile Include="Utils\QueueItem.cs" />
   </ItemGroup>

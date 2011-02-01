@@ -1,12 +1,10 @@
-﻿
-
-using BlueCone.Utils;
+﻿using BlueCone.Utils;
 using Microsoft.SPOT;
 using System;
 using System.Threading;
 using System.IO.Ports;
 using System.Text;
-using BlueCone.Drivers.Bluetooth;
+using BlueCone.Bluetooth;
 
 //-----------------------------------------------------------------------
 //  BlueCone Bacheloroppgave Våren 2011
@@ -32,15 +30,6 @@ namespace BlueCone
             tmp = message.Command.Split(' ');
             switch (tmp[0])
             {
-                case "RING":
-                    Debug.Print("Tilkobling fra " + tmp[2] + ", Link: " + tmp[1]);
-                    break;
-                case "NO":
-                    Debug.Print("Link " + tmp[2] + " frakoblet.");
-                    break;
-                case "NAME":
-                    Debug.Print("Friendly name of " + tmp[1] + " is " + tmp[2]);
-                    break;
                 case "GA":
                     string[] testData = new string[]
                     { "GA-6-STI-Metallica-Best Of-Wherever i may roam-", "STI-Metallica-Best Of-Master of puppets-",

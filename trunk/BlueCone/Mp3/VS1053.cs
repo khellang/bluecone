@@ -9,7 +9,7 @@ using Microsoft.SPOT;
 //      Av Terje Knutsen, Stein Arild Høiland og Kristian Hellang
 //-----------------------------------------------------------------------
 
-namespace BlueCone.Drivers
+namespace BlueCone.Mp3
 {
     /// <summary>
     /// Driver class for the VS1053 MP3 decoder.

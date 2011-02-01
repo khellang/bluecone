@@ -1,13 +1,14 @@
 using System;
 using Microsoft.SPOT;
 using System.Collections;
+using BlueCone.Utils;
 
 //-----------------------------------------------------------------------
 //  BlueCone Bacheloroppgave Våren 2011
 //      Av Terje Knutsen, Stein Arild Høiland og Kristian Hellang
 //-----------------------------------------------------------------------
 
-namespace BlueCone.Utils
+namespace BlueCone.Mp3
 {
     public class Playlist
     {

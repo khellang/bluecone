@@ -8,7 +8,7 @@ using Microsoft.SPOT;
 //      Av Terje Knutsen, Stein Arild Høiland og Kristian Hellang
 //-----------------------------------------------------------------------
 
-namespace BlueCone.Drivers.Bluetooth
+namespace BlueCone.Bluetooth
 {
     public static class Multiplexing
     {

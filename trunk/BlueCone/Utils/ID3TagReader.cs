@@ -10,8 +10,18 @@ using System.Text;
 
 namespace BlueCone.Utils
 {
-    public static class ID3Reader
+    /// <summary>
+    /// Utility class for reading Id3Tags :)
+    /// </summary>
+    public static class ID3TagReader
     {
+        #region Static Methods
+
+        /// <summary>
+        /// Method for reading the the ID3Tag of an mp3-file.
+        /// </summary>
+        /// <param name="path">The path of the mp3-file.</param>
+        /// <returns>String array with path, artist, album and title</returns>
         public static string[] ReadFile(string path)
         {
             try
@@ -26,12 +36,14 @@ namespace BlueCone.Utils
                 fs.Read(buffer, 0, 30);
                 string album = new string(Encoding.UTF8.GetChars(buffer)).Trim();
                 fs.Close();
-                return new string[] { artist, title, album };
+                return new string[] { path, artist, album, title };
             }
             catch (Exception e)
             {
                 throw e;
             }
         }
+
+        #endregion
     }
 }
