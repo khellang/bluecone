@@ -1,5 +1,7 @@
 using System.Text;
 using System;
+using BlueCone.Utils;
+using Microsoft.SPOT;
 
 //-----------------------------------------------------------------------
 //  BlueCone Bacheloroppgave Våren 2011
@@ -70,12 +72,41 @@ namespace BlueCone.Drivers.Bluetooth
         #endregion
     }
 
-    public class BluetoothMessage
+    public class BluetoothMessage : IDisposable
     {
+        #region Fields
+
+        private bool disposed = false;
+        private Link link;
+        private string command;
+
+        #endregion
+
         #region Properties
 
-        public Link Link { get; set; }
-        public string Command { get; set; }
+        public Link Link
+        {
+            get
+            {
+                return this.link;
+            }
+            set
+            {
+                this.link = value;
+            }
+        }
+
+        public string Command
+        {
+            get
+            {
+                return this.command;
+            }
+            set
+            {
+                this.command = value;
+            }
+        }
 
         #endregion
 
@@ -90,6 +121,34 @@ namespace BlueCone.Drivers.Bluetooth
         public BluetoothMessage()
         {
 
+        }
+
+        ~BluetoothMessage()
+        {
+            Dispose(false);
+        }
+
+        #endregion
+
+        #region Methods
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    if (command != null)
+                        command = null;
+                }
+                disposed = true;
+            }
         }
 
         #endregion

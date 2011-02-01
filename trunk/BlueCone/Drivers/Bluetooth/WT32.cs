@@ -2,6 +2,7 @@ using System;
 using Microsoft.SPOT;
 using System.Text;
 using System.IO.Ports;
+using System.Threading;
 
 //-----------------------------------------------------------------------
 //  BlueCone Bacheloroppgave Våren 2011
@@ -21,9 +22,7 @@ namespace BlueCone.Drivers.Bluetooth
         #region Fields
 
         private static SerialPort bluetooth;
-        private static byte[] receiveBuffer;
         private static byte[] sendBuffer;
-        private static BluetoothMessage receivedMessage;
 
         public static event MessageReceivedEventHandler MessageReceived;
 
@@ -48,7 +47,7 @@ namespace BlueCone.Drivers.Bluetooth
             Debug.Print("Message \"" + message.Command + "\" sent to link " + message.Link);
         }
 
-        public static void SendCommand(string command)
+        public static void ExcecuteCommand(string command)
         {
             sendBuffer = Multiplexing.MUX(new BluetoothMessage(Link.Control, command));
             bluetooth.Write(sendBuffer, 0, sendBuffer.Length);
@@ -59,33 +58,31 @@ namespace BlueCone.Drivers.Bluetooth
 
         #region Private Methods
 
-        // TODO: Test med statiske variabler
-        static byte SOF;
-        static byte link;
-        static int length;
-        static string message;
-
         private static void DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            SOF = ReadByte(); // Read byte
-            if (SOF == 0xBF) // Check for SOF
+            int bytesRead = 0;
+            while (bytesRead < bluetooth.BytesToRead)
             {
-                link = ReadByte(); // Read link
-                ReadByte(); // Read flags - not used
-                length = (int)ReadByte(); // Read data length
-                receiveBuffer = new byte[length];
-                bluetooth.Read(receiveBuffer, 0, receiveBuffer.Length); // Read data
-                message = new string(Encoding.UTF8.GetChars(receiveBuffer)).Trim();
-                receivedMessage = new BluetoothMessage((Link)link, message);
-                if (MessageReceived != null)
-                    MessageReceived(receivedMessage);
-                bluetooth.DiscardInBuffer();
+                byte SOF = ReadByte(); // Read byte
+                if (SOF == 0xBF) // Check for SOF
+                {
+                    byte link = ReadByte(); // Read link
+                    ReadByte(); // Read flags - not used
+                    int length = (int)ReadByte(); // Read data length
+                    byte[] receiveBuffer = new byte[length];
+                    bluetooth.Read(receiveBuffer, 0, receiveBuffer.Length); // Read data
+                    string message = new string(Encoding.UTF8.GetChars(receiveBuffer)).Trim();
+                    BluetoothMessage receivedMessage = new BluetoothMessage((Link)link, message);
+                    if (MessageReceived != null)
+                        MessageReceived(receivedMessage);
+                }
+                bytesRead++;
             }
         }
 
         private static byte ReadByte()
         {
-            receiveBuffer = new byte[1];
+            byte[] receiveBuffer = new byte[1];
             bluetooth.Read(receiveBuffer, 0, 1);
             return receiveBuffer[0];
         }
