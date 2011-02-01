@@ -8,9 +8,14 @@ using Microsoft.SPOT;
 
 namespace BlueCone.Drivers.Bluetooth
 {
-    public class Connection
+    /// <summary>
+    /// This class represents a bluetooth connection to a unit.
+    /// </summary>
+    public class Connection : IDisposable
     {
         #region Fields
+
+        private bool disposed = false;
 
         private string address;
         private Link link;
@@ -56,14 +61,17 @@ namespace BlueCone.Drivers.Bluetooth
         {
             this.address = address;
             this.link = link;
+            this.friendlyName = "Unknown";
         }
 
         #endregion
 
-        #region Methods
-
         #region Public Methods
 
+        /// <summary>
+        /// Method for sending a message to the connected unit.
+        /// </summary>
+        /// <param name="message">The message to send.</param>
         public void SendMessage(string message)
         {
             BluetoothMessage msg = new BluetoothMessage(this.link, message);
@@ -71,7 +79,37 @@ namespace BlueCone.Drivers.Bluetooth
             msg.Dispose();
         }
 
-        #endregion
+        /// <summary>
+        /// Method for closing the bluetooth connection.
+        /// </summary>
+        public void Close()
+        {
+            // TODO: Implementer denne metoden! :)
+        }
+
+        /// <summary>
+        /// Method for disposing this connection.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    if (address != null)
+                        address = null;
+                    if (friendlyName != null)
+                        friendlyName = null;
+                }
+                disposed = true;
+            }
+        }
 
         #endregion
     }

@@ -11,15 +11,18 @@ using Microsoft.SPOT;
 
 namespace BlueCone.Drivers
 {
+    /// <summary>
+    /// Driver class for the VS1053 MP3 decoder.
+    /// </summary>
     public static class VS1053
     {
         #region Fields
 
-        static private InputPort DREQ;
+        private static InputPort DREQ;
 
-        static SPI spi;
-        static private SPI.Configuration dataConfig;
-        static private SPI.Configuration cmdConfig;
+        private static SPI spi;
+        private static SPI.Configuration dataConfig;
+        private static SPI.Configuration cmdConfig;
 
         private static byte[] block = new byte[32];
         private static byte[] cmdBuffer = new byte[4];
@@ -44,6 +47,9 @@ namespace BlueCone.Drivers
 
         #region Public Methods
 
+        /// <summary>
+        /// Method for initializing the decoder. Must be called before ANY other method.
+        /// </summary>
         public static void Initialize()
         {
             SPI.SPI_module spi_module;
@@ -72,11 +78,20 @@ namespace BlueCone.Drivers
 
         }
 
+        /// <summary>
+        /// Metod for setting the volume on the left and right channel.
+        /// </summary>
+        /// <param name="left_channel">The left channel.</param>
+        /// <param name="right_channel">The right channel.</param>
         public static void SetVolume(byte left_channel, byte right_channel)
         {
             CommandWrite(SCI_VOL, (ushort)((255 - left_channel) << 8 | (255 - right_channel)));
         }
 
+        /// <summary>
+        /// Method for sending data to the decoder. Sends in chunks of 32byte.
+        /// </summary>
+        /// <param name="data">The data to decode. (This should not be too big!)</param>
         public static void SendData(byte[] data)
         {
             int size = data.Length - data.Length % 32;
@@ -98,6 +113,9 @@ namespace BlueCone.Drivers
 
         #region Private Methods
 
+        /// <summary>
+        /// Method for doing a soft reset of the module.
+        /// </summary>
         private static void Reset()
         {
             while (DREQ.Read() == false) ;
@@ -107,6 +125,11 @@ namespace BlueCone.Drivers
             Thread.Sleep(100);
         }
 
+        /// <summary>
+        /// Method for writing a command to the decoder.
+        /// </summary>
+        /// <param name="address">The address to write to.</param>
+        /// <param name="data">The data to write.</param>
         private static void CommandWrite(byte address, ushort data)
         {
             while (DREQ.Read() == false)
@@ -122,6 +145,11 @@ namespace BlueCone.Drivers
 
         }
 
+        /// <summary>
+        /// Method for reading a command from the decoder.
+        /// </summary>
+        /// <param name="address">The address to read from.</param>
+        /// <returns>The data read.</returns>
         private static ushort CommandRead(byte address)
         {
             ushort temp;
