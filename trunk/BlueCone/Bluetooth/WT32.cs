@@ -47,6 +47,13 @@ namespace BlueCone.Bluetooth
             bluetooth.Open();
             bluetooth.DataReceived += new SerialDataReceivedEventHandler(DataReceived);
             connections = new Hashtable(7);
+            // Set main settings.
+            sendBuffer = Encoding.UTF8.GetBytes("SET CONTROL MUX 1\r\n");
+            bluetooth.Write(sendBuffer, 0, sendBuffer.Length);
+            ExcecuteCommand("SET BT NAME BlueCone");
+            ExcecuteCommand("SET BT PAGEMODE 3 2000 1");
+            ExcecuteCommand("SET BT AUTH * 1234");
+            Reset();
             Debug.Print("WT32 Initialized.");
         }
 
@@ -146,7 +153,7 @@ namespace BlueCone.Bluetooth
         /// </summary>
         private static void Reset()
         {
-            // TODO: Implementer denne metoden.
+            ExcecuteCommand("RESET");
         }
 
         /// <summary>

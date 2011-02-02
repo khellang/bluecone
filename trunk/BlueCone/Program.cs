@@ -20,8 +20,9 @@ namespace BlueCone
 
         public static void Main() 
         {
-            WT32.Initialize();
             BlueConePlayer.Initialize();
+            Thread.Sleep(500);
+            WT32.Initialize();
             WT32.MessageReceived += new MessageReceivedEventHandler(WT32_MessageReceived);
             Debug.EnableGCMessages(true);
             Thread.Sleep(Timeout.Infinite);
