@@ -73,19 +73,18 @@ namespace BlueCone.Mp3
             }
             else
             {
-                Debug.Print("Mp3 decoder initialized successfully!");
+                Debug.Print("VS1053 initialized.");
             }
-
         }
 
         /// <summary>
-        /// Metod for setting the volume on the left and right channel.
+        /// Method for setting the volume.
         /// </summary>
-        /// <param name="left_channel">The left channel.</param>
-        /// <param name="right_channel">The right channel.</param>
-        public static void SetVolume(byte left_channel, byte right_channel)
+        /// <param name="volume">Volume. (1.0 is MAX, 0.0 is MIN)</param>
+        public static void SetVolume(double volume)
         {
-            CommandWrite(SCI_VOL, (ushort)((255 - left_channel) << 8 | (255 - right_channel)));
+            byte vol = (byte)(255 * volume);
+            SetVolume(vol, vol);
         }
 
         /// <summary>
@@ -112,6 +111,17 @@ namespace BlueCone.Mp3
         #endregion
 
         #region Private Methods
+
+        /// <summary>
+        /// Metod for setting the volume on the left and right channel.
+        /// <remarks>0 for min volume, 255 for max</remarks>
+        /// </summary>
+        /// <param name="left_channel">The left channel.</param>
+        /// <param name="right_channel">The right channel.</param>
+        private static void SetVolume(byte left_channel, byte right_channel)
+        {
+            CommandWrite(SCI_VOL, (ushort)((255 - left_channel) << 8 | (255 - right_channel)));
+        }
 
         /// <summary>
         /// Method for doing a soft reset of the module.

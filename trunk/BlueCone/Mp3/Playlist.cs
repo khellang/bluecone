@@ -45,6 +45,7 @@ namespace BlueCone.Mp3
             MACRegistered(MACAddress);
             GetPriority(MACAddress);
             thePlaylist.Add(new QueueItem(path, priorityValue));
+            Debug.Print(path + " lagt til med prioritet " + priorityValue);
         }
 
         public string Dequeue()
