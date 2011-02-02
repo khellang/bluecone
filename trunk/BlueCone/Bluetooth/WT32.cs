@@ -5,6 +5,9 @@ using System.IO.Ports;
 using System.Threading;
 using System.Collections;
 using System.Runtime.CompilerServices;
+using System.IO;
+using BlueCone.Mp3;
+using BlueCone.Utils;
 
 //-----------------------------------------------------------------------
 //  BlueCone Bacheloroppgave Våren 2011
@@ -31,6 +34,18 @@ namespace BlueCone.Bluetooth
         private static Hashtable connections;
 
         public static event MessageReceivedEventHandler MessageReceived;
+
+        #endregion
+
+        #region Properties
+
+        public static Hashtable Connections
+        {
+            get
+            {
+                return connections;
+            }
+        }
 
         #endregion
 
@@ -198,6 +213,7 @@ namespace BlueCone.Bluetooth
             Connection newConnection = new Connection(address, newLink);
             connections.Add(newLink, newConnection);
             Debug.Print("Connection received from " + address + ", Link : " + link);
+            BlueConePlayer.SendTracks(newConnection);
         }
 
         /// <summary>

@@ -23,12 +23,12 @@ namespace BlueCone
             BlueConePlayer.Initialize();
             Thread.Sleep(500);
             WT32.Initialize();
-            WT32.MessageReceived += new MessageReceivedEventHandler(WT32_MessageReceived);
+            WT32.MessageReceived += new MessageReceivedEventHandler(BlueConeMessageReceived);
             Debug.EnableGCMessages(true);
             Thread.Sleep(Timeout.Infinite);
         }
 
-        static void WT32_MessageReceived(BluetoothMessage message)
+        private static void BlueConeMessageReceived(BluetoothMessage message)
         {
             tmp = message.Command.Split('#');
             switch (tmp[0])
