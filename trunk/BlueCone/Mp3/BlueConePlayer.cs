@@ -73,9 +73,9 @@ namespace BlueCone.Mp3
 
         }
 
-        public static void AddTrack(string path)
+        public static void AddTrack(string path, Link link)
         {
-            playlist.Enqueue(path, "TEST");
+            playlist.Enqueue(path, link);
             WT32.BroadcastMessage("QUEUE#" + path);
         }
 

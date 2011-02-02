@@ -43,7 +43,7 @@ namespace BlueCone
                 case "PREVIOUS":
                     break;
                 case "ADD": // ADD#PATH
-                    BlueConePlayer.AddTrack(tmp[1]);
+                    BlueConePlayer.AddTrack(tmp[1], message.Link);
                     break;
                 default:
                     Debug.Print(message.Command + ", Link: " + message.Link);
