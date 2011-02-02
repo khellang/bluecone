@@ -50,6 +50,7 @@ namespace BlueCone.Bluetooth
             // Set main settings.
             sendBuffer = Encoding.UTF8.GetBytes("SET CONTROL MUX 1\r\n");
             bluetooth.Write(sendBuffer, 0, sendBuffer.Length);
+            ExcecuteCommand("SET PROFILE SPP ON");
             ExcecuteCommand("SET BT NAME BlueCone");
             ExcecuteCommand("SET BT PAGEMODE 3 2000 1");
             ExcecuteCommand("SET BT AUTH * 1234");
@@ -123,14 +124,21 @@ namespace BlueCone.Bluetooth
                     int length = (int)ReadByte(); // Read data length
                     byte[] receiveBuffer = new byte[length];
                     bluetooth.Read(receiveBuffer, 0, receiveBuffer.Length); // Read data
-                    string message = new string(Encoding.UTF8.GetChars(receiveBuffer)).Trim();
-                    if ((Link)link == Link.Control)
-                        HandleControlCommand(message);
-                    else
+                    try
                     {
-                        BluetoothMessage receivedMessage = new BluetoothMessage((Link)link, message);
-                        if (MessageReceived != null)
-                            MessageReceived(receivedMessage);
+                        string message = new string(Encoding.UTF8.GetChars(receiveBuffer)).Trim();
+                        if ((Link)link == Link.Control)
+                            HandleControlCommand(message);
+                        else
+                        {
+                            BluetoothMessage receivedMessage = new BluetoothMessage((Link)link, message);
+                            if (MessageReceived != null)
+                                MessageReceived(receivedMessage);
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        Debug.Print("Unable to read incoming message.");
                     }
                 }
                 bytesRead++;
