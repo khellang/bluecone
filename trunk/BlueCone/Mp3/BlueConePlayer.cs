@@ -26,6 +26,7 @@ namespace BlueCone.Mp3
         private static PlaybackStatus status;
 
         private static Thread playThread;
+        private static AutoResetEvent waitHandle;
         private static Playlist playlist;
 
         private static PersistentStorage ps;
@@ -42,9 +43,11 @@ namespace BlueCone.Mp3
         /// </summary>
         public static void Initialize()
         {
-            status = PlaybackStatus.Stopped;
+            status = PlaybackStatus.Playing;
             playThread = new Thread(PlayMusic);
             playlist = new Playlist();
+            waitHandle = new AutoResetEvent(false);
+            playThread.Start();
 
             // USB Hosting
             USBHostController.DeviceDisconnectedEvent += new USBH_DeviceConnectionEventHandler(DeviceDisconnected);
@@ -114,6 +117,7 @@ namespace BlueCone.Mp3
         public static void AddTrack(string path, Link link)
         {
             playlist.Enqueue(path, link);
+            waitHandle.Set();
             WT32.BroadcastMessage("QUEUE#" + path);
         }
 
@@ -127,11 +131,12 @@ namespace BlueCone.Mp3
             if (volInfo != null)
             {
                 string[] files = Directory.GetFiles(volInfo.RootDirectory);
+                connection.SendMessage("LISTSTART#" + files.Length);
                 string[] id3TagHeader;
                 foreach (string file in files)
                 {
                     id3TagHeader = ID3TagReader.ReadFile(file);
-                    connection.SendMessage("LIST#" + id3TagHeader[0] + "|" + id3TagHeader[1] + "|" + id3TagHeader[2] + "|" + id3TagHeader[3]);
+                    connection.SendMessage("LIST#" + id3TagHeader[0] + "|" + id3TagHeader[1] + "|" + id3TagHeader[2] + "|" + id3TagHeader[3] + "|");
                 }
             }
         }
@@ -145,11 +150,25 @@ namespace BlueCone.Mp3
         /// </summary>
         private static void PlayMusic()
         {
+            byte[] buffer = new byte[2048];
+            int size;
+            FileStream file;
             while (true)
             {
                 switch (status)
                 {
                     case PlaybackStatus.Playing:
+                        if (playlist.Count < 0)
+                            waitHandle.WaitOne();
+                        string song = playlist.Dequeue();
+                        Debug.Print("Playing \"" + song + "\"");
+                        file = File.OpenRead(song);
+                        do
+                        {
+                            size = file.Read(buffer, 0, 2048);
+                            VS1053.SendData(buffer);
+                            Debug.Print("Sent " + size + " bytes to VS1053");
+                        } while (size > 0);
                         break;
                     case PlaybackStatus.Paused:
                         Thread.Sleep(10);

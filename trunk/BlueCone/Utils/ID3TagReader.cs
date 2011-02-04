@@ -15,6 +15,8 @@ namespace BlueCone.Utils
     /// </summary>
     public static class ID3TagReader
     {
+        private static FileStream fs;
+
         #region Static Methods
 
         /// <summary>
@@ -26,21 +28,33 @@ namespace BlueCone.Utils
         {
             try
             {
-                FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
-                fs.Seek(-125, SeekOrigin.End);
+                fs = new FileStream(path, FileMode.Open, FileAccess.Read);
+                fs.Seek(-128, SeekOrigin.End);
                 byte[] buffer = new byte[30]; // Kanskje det er best å ha denne static?
-                fs.Read(buffer, 0, 30);
-                string title = new string(Encoding.UTF8.GetChars(buffer)).Trim();
-                fs.Read(buffer, 0, 30);
-                string artist = new string(Encoding.UTF8.GetChars(buffer)).Trim();
-                fs.Read(buffer, 0, 30);
-                string album = new string(Encoding.UTF8.GetChars(buffer)).Trim();
-                fs.Close();
-                return new string[] { path, artist, album, title };
+                fs.Read(buffer, 0, 3);
+                string TAG = new string(Encoding.UTF8.GetChars(buffer)).Trim();
+                Debug.Print(TAG);
+                if (TAG == "TAG")
+                {
+                    fs.Read(buffer, 0, 30);
+                    string title = new string(Encoding.UTF8.GetChars(buffer)).Trim();
+                    fs.Read(buffer, 0, 30);
+                    string artist = new string(Encoding.UTF8.GetChars(buffer)).Trim();
+                    fs.Read(buffer, 0, 30);
+                    string album = new string(Encoding.UTF8.GetChars(buffer)).Trim();
+                    return new string[] { path, artist, album, title };
+                }
+                else
+                    throw new InvalidOperationException("File \"" + path + "\" does not contain and ID3Tag!");
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                Debug.Print("Unable to read ID3Tag from " + path);
+                return new string[] { path, "Ukjent", "Ukjent", path };
+            }
+            finally
+            {
+                fs.Close();
             }
         }
 

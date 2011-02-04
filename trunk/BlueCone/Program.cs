@@ -20,6 +20,7 @@ namespace BlueCone
 
         public static void Main() 
         {
+            VS1053.Initialize();
             BlueConePlayer.Initialize();
             Thread.Sleep(500);
             WT32.Initialize();

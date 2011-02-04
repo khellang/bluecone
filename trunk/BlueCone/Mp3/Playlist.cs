@@ -3,6 +3,8 @@ using Microsoft.SPOT;
 using System.Collections;
 using BlueCone.Utils;
 using BlueCone.Bluetooth;
+using System.Threading;
+using System.Runtime.CompilerServices;
 //-----------------------------------------------------------------------
 //  BlueCone Bacheloroppgave Våren 2011
 //      Av Terje Knutsen, Stein Arild Høiland og Kristian Hellang
@@ -21,6 +23,18 @@ namespace BlueCone.Mp3
 
         #endregion
 
+        #region Properties
+
+        public int Count
+        {
+            get
+            {
+                return this.thePlaylist.Count;
+            }
+        }
+
+        #endregion
+
         #region Ctor
 
         public Playlist()
@@ -34,26 +48,31 @@ namespace BlueCone.Mp3
 
         #region Public Methods
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public void Clear()
         {
             myTable = new Hashtable();
             thePlaylist = new PriorityQueue();
         }
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public void Enqueue(string path, Link link)
         {
+            Debug.Print("Enqueue entered");
             LinkRegistered(link);
             GetPriority(link);
             thePlaylist.Add(new QueueItem(path, priorityValue));
             Debug.Print(path + " lagt til med prioritet " + priorityValue);
         }
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public string Dequeue()
         {
             string tmp = thePlaylist.Remove().ToString();
             return tmp;
         }
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public string[] GetPlaylist()
         {
             return thePlaylist.getQueue();
