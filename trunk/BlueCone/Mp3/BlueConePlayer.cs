@@ -45,6 +45,7 @@ namespace BlueCone.Mp3
         {
             status = PlaybackStatus.Playing;
             playThread = new Thread(PlayMusic);
+            playThread.Priority = ThreadPriority.Highest;
             playlist = new Playlist();
             waitHandle = new AutoResetEvent(false);
             playThread.Start();
@@ -165,7 +166,7 @@ namespace BlueCone.Mp3
                         file = File.OpenRead(song);
                         do
                         {
-                            size = file.Read(buffer, 0, 2048);
+                            size = file.Read(buffer, 0, buffer.Length);
                             VS1053.SendData(buffer);
                             Debug.Print("Sent " + size + " bytes to VS1053");
                         } while (size > 0);
