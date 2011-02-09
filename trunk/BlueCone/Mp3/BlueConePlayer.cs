@@ -171,6 +171,7 @@ namespace BlueCone.Mp3
                             Debug.Print("Sent " + size + " bytes to VS1053");
                         } while (size > 0);
                         file.Close();
+                        file.Dispose();
                         break;
                     case PlaybackStatus.Paused:
                         Thread.Sleep(10);

@@ -32,6 +32,7 @@ namespace BlueCone.Bluetooth
         private static SerialPort bluetooth;
         private static byte[] sendBuffer;
         private static Hashtable connections;
+        private static Thread readDataThread;
 
         public static event MessageReceivedEventHandler MessageReceived;
 
@@ -60,7 +61,10 @@ namespace BlueCone.Bluetooth
         {
             bluetooth = new SerialPort("COM1", 115200, Parity.None, 8, StopBits.One);
             bluetooth.Open();
-            bluetooth.DataReceived += new SerialDataReceivedEventHandler(DataReceived);
+            readDataThread = new Thread(ReadData);
+            readDataThread.Priority = ThreadPriority.Lowest;
+            readDataThread.Start();
+            //bluetooth.DataReceived += new SerialDataReceivedEventHandler(DataReceived);
             connections = new Hashtable(7);
             // Set main settings.
             sendBuffer = Encoding.UTF8.GetBytes("SET CONTROL MUX 1\r\n");
@@ -160,6 +164,43 @@ namespace BlueCone.Bluetooth
             }
         }
 
+        private static void ReadData()
+        {
+            while (true)
+            {
+                int bytesRead = 0;
+                while (bytesRead < bluetooth.BytesToRead)
+                {
+                    byte SOF = ReadByte(); // Read byte
+                    if (SOF == 0xBF) // Check for SOF
+                    {
+                        byte link = ReadByte(); // Read link
+                        ReadByte(); // Read flags - not used
+                        int length = (int)ReadByte(); // Read data length
+                        byte[] receiveBuffer = new byte[length];
+                        bluetooth.Read(receiveBuffer, 0, receiveBuffer.Length); // Read data
+                        try
+                        {
+                            string message = new string(Encoding.UTF8.GetChars(receiveBuffer)).Trim();
+                            if ((Link)link == Link.Control)
+                                HandleControlCommand(message);
+                            else
+                            {
+                                BluetoothMessage receivedMessage = new BluetoothMessage((Link)link, message);
+                                if (MessageReceived != null)
+                                    MessageReceived(receivedMessage);
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            Debug.Print("Unable to read incoming message.");
+                        }
+                    }
+                    bytesRead++;
+                }
+            }
+        }
+
         /// <summary>
         /// Helper method for reading a simple byte from the SerialPort.
         /// </summary>
@@ -196,6 +237,9 @@ namespace BlueCone.Bluetooth
                     break;
                 case "NAME": // Mottatt "friendlyname"
                     Debug.Print("Friendly name of " + tmp[1] + " is " + tmp[2]);
+                    break;
+                default:
+                    Debug.Print(command);
                     break;
                     // TODO: Implementer resten av denne metoden.
             }
