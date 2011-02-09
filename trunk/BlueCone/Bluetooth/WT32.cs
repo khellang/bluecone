@@ -73,7 +73,7 @@ namespace BlueCone.Bluetooth
             ExcecuteCommand("SET BT NAME BlueCone");
             ExcecuteCommand("SET BT PAGEMODE 3 2000 1");
             ExcecuteCommand("SET BT AUTH * 1234");
-            ExcecuteCommand("SET BT PAIR");
+            ExcecuteCommand("SET");
             Thread.Sleep(100);
             Reset();
         }
