@@ -73,8 +73,9 @@ namespace BlueCone.Bluetooth
             ExcecuteCommand("SET BT NAME BlueCone");
             ExcecuteCommand("SET BT PAGEMODE 3 2000 1");
             ExcecuteCommand("SET BT AUTH * 1234");
+            ExcecuteCommand("SET BT PAIR");
+            Thread.Sleep(100);
             Reset();
-            Debug.Print("WT32 Initialized.");
         }
 
         /// <summary>
@@ -236,7 +237,15 @@ namespace BlueCone.Bluetooth
                     RemoveConnection(tmp[2]);
                     break;
                 case "NAME": // Mottatt "friendlyname"
+                    string friendlyName = "";
+                    for (int i = 2; i < tmp.Length; i++)
+                    {
+                        friendlyName += tmp[i] + " ";
+                    }
                     Debug.Print("Friendly name of " + tmp[1] + " is " + tmp[2]);
+                    break;
+                case "READY.":
+                    Debug.Print("WT32 Initialized.");
                     break;
                 default:
                     Debug.Print(command);
