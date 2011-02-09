@@ -62,6 +62,7 @@ namespace BlueCone.Bluetooth
         {
             if (!isInitialized)
             {
+                isInitialized = true;
                 bluetooth = new SerialPort("COM1", 115200, Parity.None, 8, StopBits.One);
                 bluetooth.Open();
                 readDataThread = new Thread(ReadData);
@@ -209,7 +210,6 @@ namespace BlueCone.Bluetooth
                     break;
                 case "READY.":
                     Debug.Print("WT32 Initialized.");
-                    isInitialized = true;
                     break;
                 default:
                     Debug.Print(command);
