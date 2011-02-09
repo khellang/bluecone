@@ -29,6 +29,7 @@ namespace BlueCone.Bluetooth
     {
         #region Fields
 
+        private static bool isInitialized = false;
         private static SerialPort bluetooth;
         private static byte[] sendBuffer;
         private static Hashtable connections;
@@ -59,23 +60,25 @@ namespace BlueCone.Bluetooth
         /// </summary>
         public static void Initialize()
         {
-            bluetooth = new SerialPort("COM1", 115200, Parity.None, 8, StopBits.One);
-            bluetooth.Open();
-            readDataThread = new Thread(ReadData);
-            readDataThread.Priority = ThreadPriority.Lowest;
-            readDataThread.Start();
-            //bluetooth.DataReceived += new SerialDataReceivedEventHandler(DataReceived);
-            connections = new Hashtable(7);
-            // Set main settings.
-            sendBuffer = Encoding.UTF8.GetBytes("SET CONTROL MUX 1\r\n");
-            bluetooth.Write(sendBuffer, 0, sendBuffer.Length);
-            ExcecuteCommand("SET PROFILE SPP ON");
-            ExcecuteCommand("SET BT NAME BlueCone");
-            ExcecuteCommand("SET BT PAGEMODE 3 2000 1");
-            ExcecuteCommand("SET BT AUTH * 1234");
-            ExcecuteCommand("SET");
-            Thread.Sleep(100);
-            Reset();
+            if (!isInitialized)
+            {
+                bluetooth = new SerialPort("COM1", 115200, Parity.None, 8, StopBits.One);
+                bluetooth.Open();
+                readDataThread = new Thread(ReadData);
+                readDataThread.Priority = ThreadPriority.Lowest;
+                readDataThread.Start();
+                connections = new Hashtable(7);
+                // Set main settings.
+                sendBuffer = Encoding.UTF8.GetBytes("SET CONTROL MUX 1\r\n");
+                bluetooth.Write(sendBuffer, 0, sendBuffer.Length);
+                ExcecuteCommand("SET PROFILE SPP ON");
+                ExcecuteCommand("SET BT NAME BlueCone");
+                ExcecuteCommand("SET BT PAGEMODE 3 2000 1");
+                ExcecuteCommand("SET BT AUTH * 1234");
+                ExcecuteCommand("SET");
+                Thread.Sleep(100);
+                Reset();
+            }
         }
 
         /// <summary>
@@ -85,7 +88,7 @@ namespace BlueCone.Bluetooth
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static void SendMessage(BluetoothMessage message)
         {
-            if (!bluetooth.IsOpen)
+            if (!isInitialized)
                 throw new InvalidOperationException("Please call Initialize() before sending messages.");
             
             sendBuffer = Multiplexing.MUX(message);
@@ -113,7 +116,7 @@ namespace BlueCone.Bluetooth
         [MethodImpl(MethodImplOptions.Synchronized)] 
         public static void ExcecuteCommand(string command)
         {
-            if (!bluetooth.IsOpen)
+            if (!isInitialized)
                 throw new InvalidOperationException("Please call Initialize() before sending messages.");
 
             sendBuffer = Multiplexing.MUX(new BluetoothMessage(Link.Control, command));
@@ -124,46 +127,6 @@ namespace BlueCone.Bluetooth
         #endregion
 
         #region Private Methods
-
-        /// <summary>
-        /// This method is called once the SerialPort receives any data.
-        /// It calls either <see cref="HandleControlCommand"/> or the <see cref="MessageReceived"/> event.
-        /// </summary>
-        /// <param name="sender">The sender object of this event.</param>
-        /// <param name="e">The event arguments.</param>
-        private static void DataReceived(object sender, SerialDataReceivedEventArgs e)
-        {
-            int bytesRead = 0;
-            while (bytesRead < bluetooth.BytesToRead)
-            {
-                byte SOF = ReadByte(); // Read byte
-                if (SOF == 0xBF) // Check for SOF
-                {
-                    byte link = ReadByte(); // Read link
-                    ReadByte(); // Read flags - not used
-                    int length = (int)ReadByte(); // Read data length
-                    byte[] receiveBuffer = new byte[length];
-                    bluetooth.Read(receiveBuffer, 0, receiveBuffer.Length); // Read data
-                    try
-                    {
-                        string message = new string(Encoding.UTF8.GetChars(receiveBuffer)).Trim();
-                        if ((Link)link == Link.Control)
-                            HandleControlCommand(message);
-                        else
-                        {
-                            BluetoothMessage receivedMessage = new BluetoothMessage((Link)link, message);
-                            if (MessageReceived != null)
-                                MessageReceived(receivedMessage);
-                        }
-                    }
-                    catch (Exception)
-                    {
-                        Debug.Print("Unable to read incoming message.");
-                    }
-                }
-                bytesRead++;
-            }
-        }
 
         private static void ReadData()
         {
@@ -246,6 +209,7 @@ namespace BlueCone.Bluetooth
                     break;
                 case "READY.":
                     Debug.Print("WT32 Initialized.");
+                    isInitialized = true;
                     break;
                 default:
                     Debug.Print(command);
