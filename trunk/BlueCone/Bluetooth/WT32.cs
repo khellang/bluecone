@@ -229,7 +229,7 @@ namespace BlueCone.Bluetooth
             Link newLink = (Link)Convert.ToByte(link);
             Connection newConnection = new Connection(address, newLink);
             connections.Add(newLink, newConnection);
-            Debug.Print("Connection received from " + address + ", Link : " + link);
+            Debug.Print("Connection received from " + address + ", Link : " + link + ". Sending tracks...");
             BlueConePlayer.SendTracks(newConnection);
         }
 

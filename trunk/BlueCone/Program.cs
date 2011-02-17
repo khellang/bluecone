@@ -42,17 +42,20 @@ namespace BlueCone
                     break;
                 case "STOP":
                     break;
-                case "PREVIOUS":
+                case "PREV":
                     break;
                 case "ADD": // ADD#PATH
                     BlueConePlayer.AddTrack(tmp[1], message.Link);
+                    break;
+                case "VOLUP":
+                    break;
+                case "VOLDOWN":
                     break;
                 default:
                     Debug.Print(message.Command + ", Link: " + message.Link);
                     break;
             }
             message.Dispose();
-            //Debug.GC(true);
         }     
     }
 }

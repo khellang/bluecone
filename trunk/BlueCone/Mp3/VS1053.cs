@@ -140,11 +140,12 @@ namespace BlueCone.Mp3
         /// <summary>
         /// Method for stopping playback.
         /// </summary>
-        public void StopPlayback()
+        public static void StopPlayback()
         {
             // send at least 2052 bytes of endFillByte[7:0].
             // read endFillByte (0 .. 15) from wram
             ushort endFillByte = WRAMRead(para_endFillByte);
+            Debug.Print("Read endFillByte: " + endFillByte);
             // clear endFillByte (8 .. 15)
             endFillByte = (ushort)(endFillByte ^ 0x00FF);
             for (int n = 0; n < 2052; n++)
@@ -180,7 +181,7 @@ namespace BlueCone.Mp3
         /// </summary>
         /// <param name="address"></param>
         /// <returns></returns>
-        private ushort WRAMRead(ushort address) {
+        private static ushort WRAMRead(ushort address) {
             ushort tmp1, tmp2;
             SCIWrite(SCI_WRAMADDR, address);
             tmp1 = SCIRead(SCI_WRAM);

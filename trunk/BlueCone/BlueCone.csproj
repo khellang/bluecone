@@ -51,6 +51,7 @@
     <Compile Include="Mp3\Playlist.cs" />
     <Compile Include="Utils\PriorityQueue.cs" />
     <Compile Include="Utils\QueueItem.cs" />
+    <Compile Include="Utils\Settings.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FEZDomino_GHIElectronics.NETMF.FEZ, Version=4.1.1.0, Culture=neutral, processorArchitecture=MSIL">
