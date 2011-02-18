@@ -76,7 +76,6 @@ namespace BlueCone.Bluetooth
                 ExcecuteCommand("SET BT NAME BlueCone");
                 ExcecuteCommand("SET BT PAGEMODE 3 2000 1");
                 ExcecuteCommand("SET BT AUTH * 1234");
-                ExcecuteCommand("SET");
                 Thread.Sleep(100);
                 Reset();
             }
@@ -90,11 +89,11 @@ namespace BlueCone.Bluetooth
         public static void SendMessage(BluetoothMessage message)
         {
             if (!isInitialized)
-                throw new InvalidOperationException("Please call Initialize() before sending messages.");
+                throw new InvalidOperationException("WT32: Please call Initialize() before sending messages.");
             
             sendBuffer = Multiplexing.MUX(message);
             bluetooth.Write(sendBuffer, 0, sendBuffer.Length);
-            Debug.Print("Message \"" + message.Command + "\" sent to link " + message.Link);
+            Debug.Print("WT32: Message \"" + message.Command + "\" sent to link " + message.Link + ".");
         }
 
         /// <summary>
@@ -118,11 +117,11 @@ namespace BlueCone.Bluetooth
         public static void ExcecuteCommand(string command)
         {
             if (!isInitialized)
-                throw new InvalidOperationException("Please call Initialize() before sending messages.");
+                throw new InvalidOperationException("WT32: Please call Initialize() before sending commands.");
 
             sendBuffer = Multiplexing.MUX(new BluetoothMessage(Link.Control, command));
             bluetooth.Write(sendBuffer, 0, sendBuffer.Length);
-            Debug.Print("Command \"" + command + "\" sent");
+            Debug.Print("WT32: Command \"" + command + "\" sent.");
         }
 
         #endregion
@@ -158,7 +157,7 @@ namespace BlueCone.Bluetooth
                         }
                         catch (Exception)
                         {
-                            Debug.Print("Unable to read incoming message.");
+                            Debug.Print("WT32: Unable to read incoming message.");
                         }
                     }
                     bytesRead++;
@@ -206,13 +205,13 @@ namespace BlueCone.Bluetooth
                     {
                         friendlyName += tmp[i] + " ";
                     }
-                    Debug.Print("Friendly name of " + tmp[1] + " is " + tmp[2]);
+                    Debug.Print("WT32: Friendly name of " + tmp[1] + " is " + tmp[2]);
                     break;
                 case "READY.":
-                    Debug.Print("WT32 Initialized.");
+                    Debug.Print("WT32: Initialized Bluetooth Module.");
                     break;
                 default:
-                    Debug.Print(command);
+                    Debug.Print("WT32: " + command);
                     break;
                     // TODO: Implementer resten av denne metoden.
             }
@@ -229,7 +228,7 @@ namespace BlueCone.Bluetooth
             Link newLink = (Link)Convert.ToByte(link);
             Connection newConnection = new Connection(address, newLink);
             connections.Add(newLink, newConnection);
-            Debug.Print("Connection received from " + address + ", Link : " + link + ". Sending tracks...");
+            Debug.Print("WT32: Connection received from " + address + ", Link : " + link + ". Sending tracks...");
             BlueConePlayer.SendTracks(newConnection);
         }
 
@@ -243,7 +242,7 @@ namespace BlueCone.Bluetooth
             Link oldLink = (Link)Convert.ToByte(link);
             if (connections.Contains(oldLink))
                 connections.Remove(oldLink);
-            Debug.Print("Connection " + link + " removed");
+            Debug.Print("WT32: Connection " + link + " removed");
         }
 
         #endregion

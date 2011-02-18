@@ -56,7 +56,7 @@ namespace BlueCone.Mp3
             RemovableMedia.Eject += new EjectEventHandler(RemovableMedia_Eject);
             RemovableMedia.Insert += new InsertEventHandler(RemovableMedia_Insert);
 
-            Debug.Print("BlueConePlayer initialized.");
+            Debug.Print("BlueConePlayer: Initialized.");
         }
 
         /// <summary>
@@ -162,7 +162,7 @@ namespace BlueCone.Mp3
                         if (playlist.Count < 0)
                             waitHandle.WaitOne();
                         string song = playlist.Dequeue();
-                        Debug.Print("Playing \"" + song + "\"");
+                        Debug.Print("BlueConePlayer: Playing \"" + song + "\"");
                         file = File.OpenRead(song);
                         do
                         {

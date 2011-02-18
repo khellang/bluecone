@@ -25,7 +25,7 @@ namespace BlueCone
             Thread.Sleep(500);
             WT32.Initialize();
             WT32.MessageReceived += new MessageReceivedEventHandler(BlueConeMessageReceived);
-            Debug.EnableGCMessages(true);
+            Debug.EnableGCMessages(false);
             Thread.Sleep(Timeout.Infinite);
         }
 
@@ -35,21 +35,28 @@ namespace BlueCone
             switch (tmp[0])
             {
                 case "NEXT":
+                    Debug.Print("NEXT");
                     break;
                 case "PLAY":
+                    Debug.Print("PLAY");
                     break;
                 case "PAUSE":
+                    Debug.Print("PAUSE");
                     break;
                 case "STOP":
+                    Debug.Print("STOP");
                     break;
                 case "PREV":
+                    Debug.Print("PREV");
                     break;
                 case "ADD": // ADD#PATH
                     BlueConePlayer.AddTrack(tmp[1], message.Link);
                     break;
                 case "VOLUP":
+                    //VS1053.VolUp();
                     break;
                 case "VOLDOWN":
+                    //VS1053.VolDown();
                     break;
                 default:
                     Debug.Print(message.Command + ", Link: " + message.Link);

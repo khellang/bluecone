@@ -33,7 +33,6 @@ namespace BlueCone.Utils
                 byte[] buffer = new byte[30]; // Kanskje det er best å ha denne static?
                 fs.Read(buffer, 0, 3);
                 string TAG = new string(Encoding.UTF8.GetChars(buffer)).Trim();
-                Debug.Print(TAG);
                 if (TAG == "TAG")
                 {
                     fs.Read(buffer, 0, 30);

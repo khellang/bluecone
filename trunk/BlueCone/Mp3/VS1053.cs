@@ -27,6 +27,8 @@ namespace BlueCone.Mp3
         private static byte[] block = new byte[32];
         private static byte[] cmdBuffer = new byte[4];
 
+        private static double currentVol = 1.0;
+
         #endregion
 
         #region Constants
@@ -94,6 +96,8 @@ namespace BlueCone.Mp3
             SCIWrite(SCI_CLOCKF, 0x98 << 8);
             SCIWrite(SCI_VOL, 0x0101);
 
+            StopPlayback();
+
             if (SCIRead(SCI_VOL) != (0x0101))
             {
                 throw new Exception("VS1053: Failed to initialize MP3 Decoder.");
@@ -105,11 +109,36 @@ namespace BlueCone.Mp3
         }
 
         /// <summary>
+        /// Method for adjusting the volume up.
+        /// </summary>
+        public static void VolUp()
+        {
+            if (currentVol <= 0.9)
+            {
+                currentVol += 0.1;
+                SetVolume(currentVol);
+            }
+        }
+
+        /// <summary>
+        /// Method for adjusting the volume down
+        /// </summary>
+        public static void VolDown()
+        {
+            if (currentVol >= 0.1)
+            {
+                currentVol -= 0.1;
+                SetVolume(currentVol);
+            }
+        }
+
+        /// <summary>
         /// Method for setting the volume.
         /// </summary>
         /// <param name="volume">Volume. (1.0 is MAX, 0.0 is MIN)</param>
         public static void SetVolume(double volume)
         {
+            currentVol = volume;
             byte vol = (byte)(255 * volume);
             SetVolume(vol, vol);
             Debug.Print("VS1053: Volume changed to " + volume + ".");
@@ -134,42 +163,16 @@ namespace BlueCone.Mp3
 
                 spi.Write(block);
             }
-            Debug.Print("VS1053: " + data.Length + " bytes of data sent.");
+            //Debug.Print("VS1053: " + data.Length + " bytes of data sent. Decode time: " + SCIRead(SCI_DECODE_TIME));
         }
 
-        /// <summary>
-        /// Method for stopping playback.
-        /// </summary>
         public static void StopPlayback()
         {
-            // send at least 2052 bytes of endFillByte[7:0].
-            // read endFillByte (0 .. 15) from wram
-            ushort endFillByte = WRAMRead(para_endFillByte);
-            Debug.Print("Read endFillByte: " + endFillByte);
-            // clear endFillByte (8 .. 15)
-            endFillByte = (ushort)(endFillByte ^ 0x00FF);
-            for (int n = 0; n < 2052; n++)
-                spi.Write(new ushort[] { endFillByte });
-            // set SCI_MODE to SM_CANCEL
-            ushort sciModeByte = SCIRead(SCI_MODE);
-            sciModeByte |= SM_CANCEL;
-            SCIWrite(SCI_MODE, sciModeByte);
-            // send up to 2052 bytes of endFillByte[7:0].
-            for (int i = 0; i < 64; i++)
-            {
-                for (int n = 0; n < 32; n++)
-                {
-                    spi.Write(new ushort[] { endFillByte });
-                    // read SCI_MODE; if SM_CANCEL is still set, repeat
-                    sciModeByte = SCIRead(SCI_MODE);
-                    if ((sciModeByte & SM_CANCEL) == 0x0000)
-                        break;
-                }
-            }
-            if ((sciModeByte & SM_CANCEL) == 0x0000)
-                Debug.Print("VS1053: Stopped playback, OK.");
-            else
-                Debug.Print("VS1053: SM_CANCEL not cleared after 2048 bytes! Needs software reset.");
+            uint endFillByte = WRAMRead(para_endFillByte);
+            for(int n=0; n<2052; n++) SDIWrite((byte)(0xFF & endFillByte));
+            SCIWrite(SCI_MODE,(SM_SDINEW | SM_CANCEL));
+            for(int n=0; n<2048; n++) SDIWrite((byte)(0xFF & endFillByte));
+            Reset();
         }
 
         #endregion
@@ -181,22 +184,20 @@ namespace BlueCone.Mp3
         /// </summary>
         /// <param name="address"></param>
         /// <returns></returns>
-        private static ushort WRAMRead(ushort address) {
+        private static ushort WRAMRead(ushort address)
+        {
             ushort tmp1, tmp2;
             SCIWrite(SCI_WRAMADDR, address);
             tmp1 = SCIRead(SCI_WRAM);
-            SCIWrite(SCI_WRAMADDR,address);
+            SCIWrite(SCI_WRAMADDR, address);
             tmp2 = SCIRead(SCI_WRAM);
-            if (tmp1==tmp2)
-                return tmp1;
-            SCIWrite(SCI_WRAMADDR,address);
+            if (tmp1 == tmp2) return tmp1;
+            SCIWrite(SCI_WRAMADDR, address);
             tmp1 = SCIRead(SCI_WRAM);
-            if (tmp1==tmp2) 
-                return tmp1;
-            SCIWrite(SCI_WRAMADDR,address);
+            if (tmp1 == tmp2) return tmp1;
+            SCIWrite(SCI_WRAMADDR, address);
             tmp1 = SCIRead(SCI_WRAM);
-            if (tmp1==tmp2) 
-                return tmp1;
+            if (tmp1 == tmp2) return tmp1;
             return tmp1;
         }
 
@@ -217,10 +218,16 @@ namespace BlueCone.Mp3
         private static void Reset()
         {
             while (!DREQ.Read());
-            SCIWrite(SCI_MODE, (ushort)(SCIRead(SCI_MODE) | SM_RESET));
+            SCIWrite(SCI_MODE, (ushort)(SM_SDINEW | SM_RESET));
             Thread.Sleep(1);
             while (!DREQ.Read());
             Thread.Sleep(100);
+        }
+
+        private static void SDIWrite(byte datum)
+        {
+            while (!DREQ.Read()) ;
+            spi.Write(new byte[] { datum });
         }
 
         /// <summary>
@@ -240,7 +247,6 @@ namespace BlueCone.Mp3
             cmdBuffer[3] = (byte)data;
 
             spi.Write(cmdBuffer);
-
         }
 
         /// <summary>
