@@ -63,27 +63,11 @@ namespace BlueCone.Utils
             count++;
             if (count >= 2 && priorityOn)
                 BubbleUp();
-
-            /*
-            count++;
-            if (count == theQueue.Length)
-                DoubleQueue();
-            theQueue[count] = qi;
-            BubbleUp();
-             * */
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
         public QueueItem Remove()
         {
-            /*
-            if (count < 0)
-                return new QueueItem("****** tom kø!! ********", 0); // kun for å vise at køen er tom, må bytte dette ut
-            QueueItem tmp = theQueue[count];
-            theQueue[count] = null;
-            count--;
-            return tmp;
-             * */
             if (count < 0)
                 return new QueueItem("****** tom kø!! ********", 0);
             QueueItem tmp = theQueue[0];
@@ -100,14 +84,6 @@ namespace BlueCone.Utils
                 tmp[i] = theQueue[i].Path;
             }
             return tmp;
-            /*
-            string[] tmp = new string[count + 1];
-            for (int i = count; i >= 0; i--)
-            {
-                tmp[count - i] = theQueue[i].Path;
-            }
-            return tmp;
-             * */
         }
 
         #endregion
@@ -115,16 +91,7 @@ namespace BlueCone.Utils
         #region Private Methods
         private void BubbleUp()
         {
-            /*
-            int i = count;
-            while (i - 1 >= 0 && theQueue[i].CompareTo(theQueue[i - 1]) >= 0)
-            {
-                QueueItem tmp = theQueue[i - 1];
-                theQueue[i - 1] = theQueue[i];
-                theQueue[i] = tmp;
-                i--;
-            }
-             * */
+        
             int i = count - 1;
             while (i - 1 >= 0 && theQueue[i].CompareTo(theQueue[i - 1]) < 0)
             {
