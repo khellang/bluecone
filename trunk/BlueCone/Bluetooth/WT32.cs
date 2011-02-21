@@ -228,7 +228,7 @@ namespace BlueCone.Bluetooth
             Link newLink = (Link)Convert.ToByte(link);
             Connection newConnection = new Connection(address, newLink);
             connections.Add(newLink, newConnection);
-            Debug.Print("WT32: Connection received from " + address + ", Link : " + link + ". Sending tracks...");
+            Debug.Print("WT32: Connection received from " + address + ", Link : " + link + ".");
             BlueConePlayer.SendTracks(newConnection);
         }
 

@@ -28,7 +28,7 @@ namespace BlueCone.Utils
         {
             try
             {
-                fs = new FileStream(path, FileMode.Open, FileAccess.Read);
+                fs = File.OpenRead(path);
                 fs.Seek(-128, SeekOrigin.End);
                 byte[] buffer = new byte[30]; // Kanskje det er best å ha denne static?
                 fs.Read(buffer, 0, 3);

@@ -119,7 +119,12 @@ namespace BlueCone.Mp3
         {
             playlist.Enqueue(path, link);
             waitHandle.Set();
-            WT32.BroadcastMessage("QUEUE#" + path);
+            //string[] playQueue = playlist.GetPlaylist();
+            //WT32.BroadcastMessage("STARTQUEUE#" + playQueue.Length);
+            //foreach (string track in playQueue)
+            //{
+            //    WT32.BroadcastMessage("QUEUE#" + track);
+            //}
         }
 
         /// <summary>
@@ -132,6 +137,7 @@ namespace BlueCone.Mp3
             if (volInfo != null)
             {
                 string[] files = Directory.GetFiles(volInfo.RootDirectory);
+                Debug.Print("BlueConePlayer: Sending tracks to link " + connection.Link);
                 connection.SendMessage("LISTSTART#" + files.Length);
                 string[] id3TagHeader;
                 foreach (string file in files)
@@ -139,6 +145,16 @@ namespace BlueCone.Mp3
                     id3TagHeader = ID3TagReader.ReadFile(file);
                     connection.SendMessage("LIST#" + id3TagHeader[0] + "|" + id3TagHeader[1] + "|" + id3TagHeader[2] + "|" + id3TagHeader[3] + "|");
                 }
+                //if (playlist.Count >= 0)
+                //{
+                //    Debug.Print("BlueConePlayer: Sending queue to link " + connection.Link);
+                //    string[] playQueue = playlist.GetPlaylist();
+                //    connection.SendMessage("STARTQUEUE#" + playQueue.Length);
+                //    foreach (string track in playQueue)
+                //    {
+                //        connection.SendMessage("QUEUE#" + track);
+                //    }
+                //}
             }
         }
 
