@@ -20,11 +20,13 @@ namespace BlueCone
 
         public static void Main() 
         {
+            LED.Initialize();
             VS1053.Initialize();
             BlueConePlayer.Initialize();
             Thread.Sleep(500);
             WT32.Initialize();
             WT32.MessageReceived += new MessageReceivedEventHandler(BlueConeMessageReceived);
+            LED.State = LEDState.Ready;
             Debug.EnableGCMessages(false);
             Thread.Sleep(Timeout.Infinite);
         }

@@ -37,6 +37,7 @@
     <Compile Include="Bluetooth\BluetoothMessage.cs" />
     <Compile Include="Bluetooth\Connection.cs" />
     <Compile Include="Bluetooth\Multiplexing.cs" />
+    <Compile Include="LED.cs" />
     <Compile Include="Mp3\BlueConePlayer.cs" />
     <Compile Include="Mp3\VS1053.cs" />
     <Compile Include="Bluetooth\WT32.cs" />

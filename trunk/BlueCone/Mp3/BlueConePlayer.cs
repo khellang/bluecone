@@ -119,6 +119,7 @@ namespace BlueCone.Mp3
         {
             playlist.Enqueue(path, link);
             waitHandle.Set();
+            Debug.Print("Received track \"" + path + "\" from " + link);
             //string[] playQueue = playlist.GetPlaylist();
             //WT32.BroadcastMessage("STARTQUEUE#" + playQueue.Length);
             //foreach (string track in playQueue)
@@ -136,13 +137,15 @@ namespace BlueCone.Mp3
         {
             if (volInfo != null)
             {
-                string[] files = Directory.GetFiles(volInfo.RootDirectory);
+                DirectoryInfo di = new DirectoryInfo(volInfo.RootDirectory);
+                FileInfo[] files = di.GetFiles();
+
                 Debug.Print("BlueConePlayer: Sending tracks to link " + connection.Link);
                 connection.SendMessage("LISTSTART#" + files.Length);
                 string[] id3TagHeader;
-                foreach (string file in files)
+                foreach (FileInfo file in files)
                 {
-                    id3TagHeader = ID3TagReader.ReadFile(file);
+                    id3TagHeader = ID3TagReader.ReadFile(file.FullName);
                     connection.SendMessage("LIST#" + id3TagHeader[0] + "|" + id3TagHeader[1] + "|" + id3TagHeader[2] + "|" + id3TagHeader[3] + "|");
                 }
                 //if (playlist.Count >= 0)
@@ -179,6 +182,7 @@ namespace BlueCone.Mp3
                             waitHandle.WaitOne();
                         string song = playlist.Dequeue();
                         Debug.Print("BlueConePlayer: Playing \"" + song + "\"");
+                        LED.State = LEDState.Playing;
                         file = File.OpenRead(song);
                         do
                         {
@@ -187,6 +191,7 @@ namespace BlueCone.Mp3
                         } while (size > 0);
                         file.Close();
                         file.Dispose();
+                        LED.State = LEDState.Ready;
                         break;
                     case PlaybackStatus.Paused:
                         Thread.Sleep(10);
