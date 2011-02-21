@@ -159,7 +159,7 @@ namespace BlueCone.Mp3
                 switch (status)
                 {
                     case PlaybackStatus.Playing:
-                        if (playlist.Count < 0)
+                        if (playlist.Count <= 0)
                             waitHandle.WaitOne();
                         string song = playlist.Dequeue();
                         Debug.Print("BlueConePlayer: Playing \"" + song + "\"");
