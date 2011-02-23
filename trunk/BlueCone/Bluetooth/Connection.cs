@@ -74,7 +74,7 @@ namespace BlueCone.Bluetooth
         /// <param name="message">The message to send.</param>
         public void SendMessage(string message)
         {
-            BluetoothMessage msg = new BluetoothMessage(this.link, message);
+            BluetoothMessage msg = new BluetoothMessage(this.link, message + "\r\n");
             WT32.SendMessage(msg);
             msg.Dispose();
         }
