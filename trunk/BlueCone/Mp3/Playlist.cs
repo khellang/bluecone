@@ -56,11 +56,12 @@ namespace BlueCone.Mp3
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void Enqueue(string path, Link link)
+        public int Enqueue(string path, Link link)
         {
             LinkRegistered(link);
             GetPriority(link);
-            thePlaylist.Add(new QueueItem(path, priorityValue));
+            int pos = thePlaylist.Add(new QueueItem(path, priorityValue));
+            return pos;
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]

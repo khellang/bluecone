@@ -55,14 +55,19 @@ namespace BlueCone.Utils
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void Add(QueueItem qi)
+        public int Add(QueueItem qi)
         {
             if (theQueue.Length == count)
                 DoubleQueue();
             theQueue[count] = qi;
             count++;
             if (count >= 2 && priorityOn)
-                BubbleUp();
+            {
+             
+                int pos = BubbleUp();
+                return pos;
+            }
+            return count - 1;
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
@@ -89,7 +94,7 @@ namespace BlueCone.Utils
         #endregion
 
         #region Private Methods
-        private void BubbleUp()
+        private int BubbleUp()
         {
         
             int i = count - 1;
@@ -100,6 +105,7 @@ namespace BlueCone.Utils
                 theQueue[i] = tmp;
                 i--;
             }
+            return i;
         }
 
         private void DoubleQueue()

@@ -152,9 +152,9 @@ namespace BlueCone.Mp3
                 //    {
                 //        connection.SendMessage("QUEUE#" + track);
                 //    }
+        }
                 //}
             }
-        }
 
         #endregion
 
