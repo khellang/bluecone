@@ -120,7 +120,7 @@ namespace BlueCone.Mp3
             int pos = playlist.Enqueue(path, link);
             waitHandle.Set();
             Debug.Print("Received track \"" + path + "\" from " + link);
-            WT32.BroadcastMessage("QUEUE#" + path);
+            WT32.BroadcastMessage("QUEUE#" + pos + "|" + path);
         }
 
         /// <summary>
@@ -154,6 +154,7 @@ namespace BlueCone.Mp3
                     }
                 }
             }
+        }
 
         #endregion
 
