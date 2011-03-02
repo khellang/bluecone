@@ -93,7 +93,7 @@ namespace BlueCone.Bluetooth
             
             sendBuffer = Multiplexing.MUX(message);
             bluetooth.Write(sendBuffer, 0, sendBuffer.Length);
-            Debug.Print("WT32: Message \"" + message.Command + "\" sent to link " + message.Link + ".");
+            Debug.Print("WT32: Message \"" + message.Command.Trim() + "\" sent to link " + message.Link + ".");
         }
 
         /// <summary>

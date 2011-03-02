@@ -62,8 +62,10 @@ namespace BlueCone
                     VS1053.VolDown();
                     break;
                 case "MASTER":
-                    if (tmp[1] == Settings.MasterPassword)
-                        WT32.SendMessage(new BluetoothMessage(message.Link, "MASTER OK"));
+                    if (tmp[1].Trim() == Settings.MasterPassword)
+                        WT32.SendMessage(new BluetoothMessage(message.Link, "MASTER#OK"));
+                    else
+                        WT32.SendMessage(new BluetoothMessage(message.Link, "MASTER#ERR"));
                     break;
                 default:
                     Debug.Print(message.Command + ", Link: " + message.Link);
