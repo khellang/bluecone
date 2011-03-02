@@ -20,6 +20,7 @@ namespace BlueCone
 
         public static void Main() 
         {
+            Settings.Load();
             LED.Initialize();
             VS1053.Initialize();
             BlueConePlayer.Initialize();

@@ -148,9 +148,9 @@ namespace BlueCone.Mp3
                     Debug.Print("BlueConePlayer: Sending queue to link " + connection.Link);
                     string[] playQueue = playlist.GetPlaylist();
                     connection.SendMessage("QUEUESTART#" + playQueue.Length);
-                    foreach (string track in playQueue)
+                    for (int pos = 0; pos < playQueue.Length; pos++)
                     {
-                        connection.SendMessage("QUEUE#" + track);
+                        connection.SendMessage("QUEUE#" + pos + "|" + playQueue[pos]);
                     }
                 }
             }
@@ -235,6 +235,7 @@ namespace BlueCone.Mp3
         /// <param name="e">The event arguments.</param>
         private static void RemovableMedia_Insert(object sender, MediaEventArgs e)
         {
+            Debug.Print(e.Volume.RootDirectory);
             volInfo = e.Volume;
             foreach (Connection connection in WT32.Connections.Values)
             {

@@ -48,6 +48,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Utils\ConvertString.cs" />
     <Compile Include="Utils\ID3TagReader.cs" />
     <Compile Include="Mp3\Playlist.cs" />
     <Compile Include="Utils\PriorityQueue.cs" />
@@ -68,6 +69,7 @@
     <Reference Include="Microsoft.SPOT.IO" />
     <Reference Include="Microsoft.SPOT.Native" />
     <Reference Include="System.IO" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources.resx">

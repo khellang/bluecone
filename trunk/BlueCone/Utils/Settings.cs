@@ -1,6 +1,10 @@
 using System;
 using Microsoft.SPOT;
 using GHIElectronics.NETMF.IO;
+using Microsoft.SPOT.IO;
+using System.IO;
+using System.Xml;
+using BlueCone.Bluetooth;
 
 //-----------------------------------------------------------------------
 //  BlueCone Bacheloroppgave Våren 2011
@@ -9,11 +13,12 @@ using GHIElectronics.NETMF.IO;
 
 namespace BlueCone.Utils
 {
-    public class Settings
+    public static class Settings
     {
         #region Fields
 
         private static PersistentStorage storage;
+        private static VolumeInfo SDVolInfo;
 
         private static bool usePriority = true;
         private static string masterPassword = "blue123";
@@ -61,7 +66,6 @@ namespace BlueCone.Utils
             {
                 pairingKey = value;
                 Save();
-                // TODO: Set pairingkey in bluetooth module...
             }
         }
 
@@ -93,24 +97,59 @@ namespace BlueCone.Utils
 
         #endregion
 
-        #region Ctor
-
-        public Settings()
-        {
-
-        }
-
-        #endregion
-
         #region Methods
 
         public static void Load()
         {
+            Debug.Print("SDCard Present: " + PersistentStorage.DetectSDCard());
             if (PersistentStorage.DetectSDCard())
             {
                 storage = new PersistentStorage("SD");
                 storage.MountFileSystem();
+                RemovableMedia.Insert += new InsertEventHandler(RemovableMedia_Insert);
             }  
+        }
+
+        static void RemovableMedia_Insert(object sender, MediaEventArgs e)
+        {
+            if (e.Volume.RootDirectory == @"\SD")
+            {
+                string path = @"\SD\settings.xml";
+                SDVolInfo = e.Volume;
+                if (File.Exists(path))
+                {
+                    Debug.Print("BlueCone: Settings found. Loading...");
+                    using (FileStream settingStream = File.OpenRead(path))
+                    using (XmlReader reader = XmlReader.Create(settingStream))
+                        while (reader.Read())
+                            switch (reader.Name)
+                            {
+                                case "usePriority":
+                                    usePriority = ConvertString.ToBoolean(reader.Value);
+                                    break;
+                                case "masterPassword":
+                                    masterPassword = reader.Value;
+                                    break;
+                                case "pairingKey":
+                                    pairingKey = int.Parse(reader.Value);
+                                    break;
+                                case "playRandom":
+                                    playRandom = ConvertString.ToBoolean(reader.Value);
+                                    break;
+                                case "volume":
+                                    volume = double.Parse(reader.Value);
+                                    break;
+                                default:
+                                    Debug.Print("Unknown setting '" + reader.Name + "'");
+                                    break;
+                            }
+                }
+                else
+                {
+                    Debug.Print("BlueCone: Could not find settings. Using default.");
+                    Save();
+                }
+            }
         }
 
         public static void Save()
