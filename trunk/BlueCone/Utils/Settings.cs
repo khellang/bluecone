@@ -22,7 +22,7 @@ namespace BlueCone.Utils
 
         private static bool usePriority = true;
         private static string masterPassword = "blue123";
-        private static int pairingKey = 1234;
+        private static string pairingKey = "1234";
         private static bool playRandom = true;
         private static double volume = 1;
 
@@ -56,7 +56,7 @@ namespace BlueCone.Utils
             }
         }
 
-        public static int PairingKey
+        public static string PairingKey
         {
             get
             {
@@ -101,7 +101,6 @@ namespace BlueCone.Utils
 
         public static void Load()
         {
-            Debug.Print("SDCard Present: " + PersistentStorage.DetectSDCard());
             if (PersistentStorage.DetectSDCard())
             {
                 storage = new PersistentStorage("SD");
@@ -122,27 +121,28 @@ namespace BlueCone.Utils
                     using (FileStream settingStream = File.OpenRead(path))
                     using (XmlReader reader = XmlReader.Create(settingStream))
                         while (reader.Read())
+                            if (reader.IsStartElement())
                             switch (reader.Name)
                             {
                                 case "usePriority":
-                                    usePriority = ConvertString.ToBoolean(reader.Value);
+                                    usePriority = ConvertString.ToBoolean(reader.ReadString());
                                     break;
                                 case "masterPassword":
-                                    masterPassword = reader.Value;
+                                    masterPassword = reader.ReadString();
                                     break;
                                 case "pairingKey":
-                                    pairingKey = int.Parse(reader.Value);
+                                    pairingKey = reader.ReadString();
                                     break;
                                 case "playRandom":
-                                    playRandom = ConvertString.ToBoolean(reader.Value);
+                                    playRandom = ConvertString.ToBoolean(reader.ReadString());
                                     break;
                                 case "volume":
-                                    volume = double.Parse(reader.Value);
+                                    volume = double.Parse(reader.ReadString());
                                     break;
                                 default:
-                                    Debug.Print("Unknown setting '" + reader.Name + "'");
                                     break;
                             }
+                    Debug.Print("BlueCone: Settings loaded.");
                 }
                 else
                 {

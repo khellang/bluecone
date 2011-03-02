@@ -20,6 +20,7 @@ namespace BlueCone
 
         public static void Main() 
         {
+            Debug.EnableGCMessages(false);
             Settings.Load();
             LED.Initialize();
             VS1053.Initialize();
@@ -28,7 +29,6 @@ namespace BlueCone
             WT32.Initialize();
             WT32.MessageReceived += new MessageReceivedEventHandler(BlueConeMessageReceived);
             LED.State = LEDState.Ready;
-            Debug.EnableGCMessages(false);
             Thread.Sleep(Timeout.Infinite);
         }
 
@@ -56,10 +56,14 @@ namespace BlueCone
                     BlueConePlayer.AddTrack(tmp[1], message.Link);
                     break;
                 case "VOLUP":
-                    //VS1053.VolUp();
+                    VS1053.VolUp();
                     break;
                 case "VOLDOWN":
-                    //VS1053.VolDown();
+                    VS1053.VolDown();
+                    break;
+                case "MASTER":
+                    if (tmp[1] == Settings.MasterPassword)
+                        WT32.SendMessage(new BluetoothMessage(message.Link, "MASTER OK"));
                     break;
                 default:
                     Debug.Print(message.Command + ", Link: " + message.Link);

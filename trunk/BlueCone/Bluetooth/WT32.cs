@@ -75,7 +75,7 @@ namespace BlueCone.Bluetooth
                 ExcecuteCommand("SET PROFILE SPP ON");
                 ExcecuteCommand("SET BT NAME BlueCone");
                 ExcecuteCommand("SET BT PAGEMODE 3 2000 1");
-                ExcecuteCommand("SET BT AUTH * 1234");
+                ExcecuteCommand("SET BT AUTH * " + Settings.PairingKey);
                 Thread.Sleep(100);
                 Reset();
             }

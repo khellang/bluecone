@@ -92,6 +92,9 @@ namespace BlueCone.Mp3
 
             Reset();
 
+            Debug.Print("HDAT0: " + SCIRead(SCI_HDAT0));
+            Debug.Print("HDAT1: " + SCIRead(SCI_HDAT1));
+
             SCIWrite(SCI_MODE, SM_SDINEW);
             SCIWrite(SCI_CLOCKF, 0x98 << 8);
             SCIWrite(SCI_VOL, 0x0101);
@@ -139,8 +142,7 @@ namespace BlueCone.Mp3
         public static void SetVolume(double volume)
         {
             currentVol = volume;
-            byte vol = (byte)(255 * volume);
-            SetVolume(vol, vol);
+            SetVolume((byte)(255 * volume));
             Debug.Print("VS1053: Volume changed to " + volume + ".");
         }
 
@@ -155,7 +157,6 @@ namespace BlueCone.Mp3
             spi.Config = dataConfig;
             for (int i = 0; i < size; i += 32)
             {
-
                 while (!DREQ.Read())
                     Thread.Sleep(1);
 
@@ -207,9 +208,9 @@ namespace BlueCone.Mp3
         /// </summary>
         /// <param name="left_channel">The left channel.</param>
         /// <param name="right_channel">The right channel.</param>
-        private static void SetVolume(byte left_channel, byte right_channel)
+        private static void SetVolume(byte volume)
         {
-            SCIWrite(SCI_VOL, (ushort)((255 - left_channel) << 8 | (255 - right_channel)));
+            SCIWrite(SCI_VOL, (ushort)((255 - volume) << 8 | (255 - volume)));
         }
 
         /// <summary>
