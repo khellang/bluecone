@@ -95,9 +95,15 @@ namespace BlueCone.Utils
             }
         }
 
+        public static VolumeInfo SDVolume
+        {
+            get { return SDVolInfo; }
+        }
+
         #endregion
 
         #region Methods
+        
 
         public static void Load()
         {

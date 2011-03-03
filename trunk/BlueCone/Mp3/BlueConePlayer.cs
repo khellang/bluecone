@@ -97,7 +97,7 @@ namespace BlueCone.Mp3
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static void Next()
         {
-
+           
         }
 
         /// <summary>
@@ -133,15 +133,19 @@ namespace BlueCone.Mp3
             if (volInfo != null)
             {
                 int totalFiles = DirectoryEx.GetTotalFiles(volInfo.RootDirectory);
-
+      
                 Debug.Print("BlueConePlayer: Sending " + totalFiles + " tracks to link " + connection.Link);
                 connection.SendMessage("LISTSTART#" + totalFiles);
-                string[] id3TagHeader;
-                foreach (string file in DirectoryEx.GetFiles(volInfo.RootDirectory))
+                FileStream fs = new FileStream("\\SD\\fileinfo.txt", FileMode.Open, FileAccess.Read);
+                StreamReader sr = new StreamReader(fs);
+                string file;
+                while ((file = sr.ReadLine()) != null)
                 {
-                    id3TagHeader = ID3TagReader.ReadFile(file);
-                    connection.SendMessage("LIST#" + id3TagHeader[0] + "|" + id3TagHeader[1] + "|" + id3TagHeader[2] + "|" + id3TagHeader[3]);
+                    connection.SendMessage("LIST#" + file);
                 }
+
+                sr.Close();
+
                 if (playlist.Count > 0)
                 {
                     Debug.Print("BlueConePlayer: Sending queue to link " + connection.Link);
@@ -158,7 +162,7 @@ namespace BlueCone.Mp3
         #endregion
 
         #region Private Methods
-
+     
         /// <summary>
         /// The main thread method that plays the music.
         /// </summary>
@@ -234,12 +238,14 @@ namespace BlueCone.Mp3
         /// <param name="e">The event arguments.</param>
         private static void RemovableMedia_Insert(object sender, MediaEventArgs e)
         {
-            Debug.Print(e.Volume.RootDirectory);
+         
             volInfo = e.Volume;
-            foreach (Connection connection in WT32.Connections.Values)
-            {
-                SendTracks(connection);
-            }
+            Mp3Info.SaveInfo();
+               foreach (Connection connection in WT32.Connections.Values)
+               {
+                   SendTracks(connection);
+               }
+            
         }
 
         /// <summary>

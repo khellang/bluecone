@@ -63,7 +63,6 @@ namespace BlueCone.Utils
             count++;
             if (count >= 2 && priorityOn)
             {
-             
                 int pos = BubbleUp();
                 return pos;
             }
@@ -73,11 +72,14 @@ namespace BlueCone.Utils
         [MethodImpl(MethodImplOptions.Synchronized)]
         public QueueItem Remove()
         {
-            if (count < 0)
+            if (count <= 0)
+            {
                 return new QueueItem("****** tom kø!! ********", 0);
+            }
             QueueItem tmp = theQueue[0];
             MoveArray();
             count--;
+            theQueue[count] = null;
             return tmp;
         }
 
@@ -120,12 +122,11 @@ namespace BlueCone.Utils
 
         private void MoveArray()
         {
-            for (int i = 1; i < count; i++)
+            for (int i = 0; i < count; i++)
             {
-                QueueItem tmp = theQueue[i];
-                theQueue[i - 1] = tmp;
+                QueueItem tmp = theQueue[i + 1];
+                theQueue[i] = tmp;
             }
-            theQueue[count - 1] = null;
         }
 
         #endregion
