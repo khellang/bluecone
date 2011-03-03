@@ -48,7 +48,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Utils\ConvertString.cs" />
+    <Compile Include="Utils\Converting.cs" />
+    <Compile Include="Utils\DirectoryEx.cs" />
     <Compile Include="Utils\ID3TagReader.cs" />
     <Compile Include="Mp3\Playlist.cs" />
     <Compile Include="Utils\PriorityQueue.cs" />

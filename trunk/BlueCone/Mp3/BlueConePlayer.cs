@@ -132,15 +132,14 @@ namespace BlueCone.Mp3
         {
             if (volInfo != null)
             {
-                DirectoryInfo di = new DirectoryInfo(volInfo.RootDirectory);
-                FileInfo[] files = di.GetFiles();
+                int totalFiles = DirectoryEx.GetTotalFiles(volInfo.RootDirectory);
 
-                Debug.Print("BlueConePlayer: Sending tracks to link " + connection.Link);
-                connection.SendMessage("LISTSTART#" + files.Length);
+                Debug.Print("BlueConePlayer: Sending " + totalFiles + " tracks to link " + connection.Link);
+                connection.SendMessage("LISTSTART#" + totalFiles);
                 string[] id3TagHeader;
-                foreach (FileInfo file in files)
+                foreach (string file in DirectoryEx.GetFiles(volInfo.RootDirectory))
                 {
-                    id3TagHeader = ID3TagReader.ReadFile(file.FullName);
+                    id3TagHeader = ID3TagReader.ReadFile(file);
                     connection.SendMessage("LIST#" + id3TagHeader[0] + "|" + id3TagHeader[1] + "|" + id3TagHeader[2] + "|" + id3TagHeader[3]);
                 }
                 if (playlist.Count > 0)

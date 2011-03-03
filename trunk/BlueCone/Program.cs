@@ -53,7 +53,7 @@ namespace BlueCone
                     Debug.Print("PREV");
                     break;
                 case "ADD": // ADD#PATH
-                    BlueConePlayer.AddTrack(tmp[1], message.Link);
+                    BlueConePlayer.AddTrack(tmp[1].Trim(), message.Link);
                     break;
                 case "VOLUP":
                     VS1053.VolUp();

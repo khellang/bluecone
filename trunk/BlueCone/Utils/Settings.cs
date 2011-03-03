@@ -125,7 +125,7 @@ namespace BlueCone.Utils
                             switch (reader.Name)
                             {
                                 case "usePriority":
-                                    usePriority = ConvertString.ToBoolean(reader.ReadString());
+                                    usePriority = Converting.StringToBoolean(reader.ReadString());
                                     break;
                                 case "masterPassword":
                                     masterPassword = reader.ReadString();
@@ -134,7 +134,7 @@ namespace BlueCone.Utils
                                     pairingKey = reader.ReadString();
                                     break;
                                 case "playRandom":
-                                    playRandom = ConvertString.ToBoolean(reader.ReadString());
+                                    playRandom = Converting.StringToBoolean(reader.ReadString());
                                     break;
                                 case "volume":
                                     volume = double.Parse(reader.ReadString());

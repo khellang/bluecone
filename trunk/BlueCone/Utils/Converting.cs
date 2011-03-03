@@ -8,9 +8,9 @@ using Microsoft.SPOT;
 
 namespace BlueCone.Utils
 {
-    public static class ConvertString
+    public static class Converting
     {
-        public static bool ToBoolean(string boolean)
+        public static bool StringToBoolean(string boolean)
         {
             switch (boolean)
             {
@@ -27,6 +27,15 @@ namespace BlueCone.Utils
                 default:
                     return false;
             }
+        }
+
+        public static string ByteToHex(byte b)
+        {
+            const string hex = "0123456789ABCDEF";
+            int lowNibble = b & 0x0F;
+            int highNibble = (b & 0xF0) >> 4;
+            string s = new string(new char[] { hex[highNibble], hex[lowNibble] });
+            return s;
         }
     }
 }
