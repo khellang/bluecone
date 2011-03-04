@@ -136,10 +136,11 @@ namespace BlueCone.Mp3
       
                 Debug.Print("BlueConePlayer: Sending " + totalFiles + " tracks to link " + connection.Link);
                 connection.SendMessage("LISTSTART#" + totalFiles);
-                FileStream fs = new FileStream("\\SD\\fileinfo.txt", FileMode.Open, FileAccess.Read);
+                FileStream fs = new FileStream("\\SD\\fileinfo.txt", FileMode.Open, FileAccess.Read, FileShare.None, 2048);
                 StreamReader sr = new StreamReader(fs);
                 string file;
-                while ((file = sr.ReadLine()) != null)
+                //while ((file = sr.ReadLine()) != null)
+                while ((file = ReadLineEx(sr)) != null)
                 {
                     connection.SendMessage("LIST#" + file);
                 }
@@ -159,6 +160,45 @@ namespace BlueCone.Mp3
             }
         }
 
+        public static string ReadLineEx(StreamReader sr)
+        {
+            int newChar = 0;
+            int bufLen = 512; // NOTE: the smaller buffer size.
+            char[] readLineBuff = new char[bufLen];
+            int growSize = 512;
+            int curPos = 0;
+            while ((newChar = sr.Read()) != -1)
+            {
+                if (curPos == bufLen)
+                {
+                    if ((bufLen + growSize) > 0xffff)
+                    {
+                        throw new Exception();
+                    }
+                    char[] tempBuf = new char[bufLen + growSize];
+                    Array.Copy(readLineBuff, 0, tempBuf, 0, bufLen);
+                    readLineBuff = tempBuf;
+                    bufLen += growSize;
+                }
+                readLineBuff[curPos] = (char)newChar;
+                if (readLineBuff[curPos] == '\n')
+                {
+                    return new string(readLineBuff, 0, curPos);
+                }
+                if (readLineBuff[curPos] == '\r')
+                {
+                    if (sr.Peek() == 10)
+                    {
+                        sr.Read();
+                    }
+                    return new string(readLineBuff, 0, curPos);
+                }
+                curPos++;
+            }
+
+            if (curPos == 0) return null; // Null fix.
+            return new string(readLineBuff, 0, curPos);
+        }
         #endregion
 
         #region Private Methods

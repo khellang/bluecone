@@ -16,10 +16,7 @@ namespace BlueCone.Utils
 
         #region Fields
 
-        private static PersistentStorage storage;
-        private static VolumeInfo SDVolInfo = Settings.SDVolume;
-
-        
+        private static VolumeInfo SDVolInfo = Settings.SDVolume;        
         #endregion
 
         public static void SaveInfo()
@@ -31,13 +28,12 @@ namespace BlueCone.Utils
                 string[] temp = ID3TagReader.ReadFile(track);
                 sw.WriteLine(temp[0] + "|" + temp[1] + "|" + temp[2] + "|" + temp[3]);
             }
+        
             sw.Flush();
             sw.Close();
-            
-            
-            Debug.Print("Entry made");
+           
+            Debug.Print("Finished writing to file");
         }
-        
         
     }
 }

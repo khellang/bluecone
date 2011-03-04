@@ -32,16 +32,16 @@ namespace BlueCone.Utils
                 fs.Seek(-128, SeekOrigin.End);
                 byte[] buffer = new byte[30]; // Kanskje det er best å ha denne static?
                 fs.Read(buffer, 0, 3);
-                string TAG = new string(Encoding.UTF8.GetChars(buffer)).Trim();
+                string TAG = new string(Encoding.UTF8.GetChars(buffer));
                 if (TAG == "TAG")
                 {
                     fs.Read(buffer, 0, 30);
-                    string title = new string(Encoding.UTF8.GetChars(buffer)).Trim();
+                    string title = new string(Encoding.UTF8.GetChars(buffer));
                     fs.Read(buffer, 0, 30);
-                    string artist = new string(Encoding.UTF8.GetChars(buffer)).Trim();
+                    string artist = new string(Encoding.UTF8.GetChars(buffer));
                     fs.Read(buffer, 0, 30);
-                    string album = new string(Encoding.UTF8.GetChars(buffer)).Trim();
-                    return new string[] { path, artist, album, title };
+                    string album = new string(Encoding.UTF8.GetChars(buffer));
+                    return new string[] { path, (artist != null) ? artist : "Ukjent", (album != null) ? album : "Ukjent", (title != null) ? title : path };
                 }
                 else
                     throw new InvalidOperationException("File \"" + path + "\" does not contain and ID3Tag!");

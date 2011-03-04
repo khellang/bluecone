@@ -35,7 +35,7 @@ namespace BlueCone
         private static void BlueConeMessageReceived(BluetoothMessage message)
         {
             tmp = message.Command.Split('#');
-            switch (tmp[0])
+            switch (tmp[0].Trim())
             {
                 case "NEXT":
                     Debug.Print("NEXT");
