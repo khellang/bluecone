@@ -218,6 +218,7 @@ namespace BlueCone.Mp3
                     case PlaybackStatus.Playing:
                         if (playlist.Count <= 0)
                             waitHandle.WaitOne();
+                        waitHandle.Reset();
                         string song = playlist.Dequeue();
                         Debug.Print("BlueConePlayer: Playing \"" + song + "\"");
                         LED.State = LEDState.Playing;
