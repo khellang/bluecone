@@ -154,6 +154,9 @@ namespace BlueCone.Mp3
 
                 sr.Close();
 
+                if (currentTrackPath != null)
+                    connection.SendMessage("PLAYING#" + currentTrackPath);
+
                 if (playlist.Count > 0)
                 {
                     Debug.Print("BlueConePlayer: Sending queue to link " + connection.Link);
@@ -164,9 +167,6 @@ namespace BlueCone.Mp3
                         connection.SendMessage("QUEUE#" + pos + "|" + playQueue[pos]);
                     }
                 }
-
-                if (currentTrackPath != null)
-                    connection.SendMessage("PLAYING#" + currentTrackPath);
             }
         }
 
