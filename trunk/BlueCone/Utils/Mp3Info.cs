@@ -7,6 +7,7 @@ using GHIElectronics.NETMF.USBHost;
 using System.Xml;
 using System.Ext.Xml;
 using System.IO;
+using BlueCone.Utils.ID3;
 
 
 namespace BlueCone.Utils
@@ -28,8 +29,8 @@ namespace BlueCone.Utils
             StreamWriter sw = new StreamWriter(fs);
             foreach (string track in DirectoryEx.GetFiles(@"\USB\"))
             {
-                string[] temp = ID3TagReader.ReadFile(track);
-                sw.WriteLine(temp[0] + "|" + temp[1] + "|" + temp[2] + "|" + temp[3]);
+                ID3Tag temp = ID3TagReader.ReadFile(track);
+                sw.WriteLine(temp.Path + "|" + temp.Artist + "|" + temp.Album + "|" + temp.Title);
             }
         
             sw.Flush();
