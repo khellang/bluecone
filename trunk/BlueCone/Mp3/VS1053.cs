@@ -28,7 +28,7 @@ namespace BlueCone.Mp3
         private static byte[] block = new byte[32];
         private static byte[] cmdBuffer = new byte[4];
 
-        private static float currentVol = 0.5f;
+        private static float currentVol = 10f;
 
         #endregion
 
@@ -98,11 +98,11 @@ namespace BlueCone.Mp3
 
             SCIWrite(SCI_MODE, SM_SDINEW);
             SCIWrite(SCI_CLOCKF, 0x98 << 8);
-            SCIWrite(SCI_VOL, 0x8080);
+            SCIWrite(SCI_VOL, 0x2828);
 
             StopPlayback();
 
-            if (SCIRead(SCI_VOL) != (0x8080))
+            if (SCIRead(SCI_VOL) != (0x2828))
             {
                 throw new Exception("VS1053: Failed to initialize MP3 Decoder.");
             }
@@ -117,9 +117,9 @@ namespace BlueCone.Mp3
         /// </summary>
         public static void VolUp()
         {
-            if (currentVol <= 0.9)
+            if (currentVol <= 14)
             {
-                currentVol += 0.1f;
+                currentVol += 1f;
                 SetVolume(currentVol);
             }
         }
@@ -129,9 +129,9 @@ namespace BlueCone.Mp3
         /// </summary>
         public static void VolDown()
         {
-            if (currentVol >= 0.1)
+            if (currentVol >= 1)
             {
-                currentVol -= 0.1f;
+                currentVol -= 1f;
                 SetVolume(currentVol);
             }
         }
@@ -144,7 +144,7 @@ namespace BlueCone.Mp3
         public static void SetVolume(float volume)
         {
             currentVol = volume;
-            SetVolume((byte)(255 * volume));
+            SetVolume((byte)((8 * volume)+135));
             Debug.Print("VS1053: Volume changed to " + volume + ".");
         }
 
