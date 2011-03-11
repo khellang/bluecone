@@ -50,10 +50,11 @@
     </Compile>
     <Compile Include="Utils\Converting.cs" />
     <Compile Include="Utils\DirectoryEx.cs" />
+    <Compile Include="Utils\ID3\UnknownID3Tag.cs" />
     <Compile Include="Utils\ID3\ID3Tag.cs" />
     <Compile Include="Utils\ID3\ID3TagReader.cs" />
     <Compile Include="Mp3\Playlist.cs" />
-    <Compile Include="Utils\ID3\ID3TagStream.cs" />
+    <Compile Include="Utils\ID3\ID3TagFileStream.cs" />
     <Compile Include="Utils\ID3\ID3v1.cs" />
     <Compile Include="Utils\ID3\ID3v2.cs" />
     <Compile Include="Utils\Mp3Info.cs" />

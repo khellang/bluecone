@@ -33,7 +33,7 @@ namespace BlueCone.Utils.ID3
                 if (tag.IsComplete)
                     return tag;
                 else
-                    return null;
+                    return new UnknownID3Tag(path);
             }
         }
 
