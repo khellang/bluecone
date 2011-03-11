@@ -28,7 +28,7 @@ namespace BlueCone.Mp3
         private static byte[] block = new byte[32];
         private static byte[] cmdBuffer = new byte[4];
 
-        private static double currentVol = 1.0;
+        private static float currentVol = 0.5f;
 
         #endregion
 
@@ -98,11 +98,11 @@ namespace BlueCone.Mp3
 
             SCIWrite(SCI_MODE, SM_SDINEW);
             SCIWrite(SCI_CLOCKF, 0x98 << 8);
-            SCIWrite(SCI_VOL, 0x1A1A);
+            SCIWrite(SCI_VOL, 0x8080);
 
             StopPlayback();
 
-            if (SCIRead(SCI_VOL) != (0x1A1A))
+            if (SCIRead(SCI_VOL) != (0x8080))
             {
                 throw new Exception("VS1053: Failed to initialize MP3 Decoder.");
             }
@@ -117,9 +117,9 @@ namespace BlueCone.Mp3
         /// </summary>
         public static void VolUp()
         {
-            if (currentVol <= 0.1)
+            if (currentVol <= 0.9)
             {
-                currentVol += 0.1;
+                currentVol += 0.1f;
                 SetVolume(currentVol);
             }
         }
@@ -131,7 +131,7 @@ namespace BlueCone.Mp3
         {
             if (currentVol >= 0.1)
             {
-                currentVol -= 0.1;
+                currentVol -= 0.1f;
                 SetVolume(currentVol);
             }
         }
@@ -141,7 +141,7 @@ namespace BlueCone.Mp3
         /// </summary>
         /// <param name="volume">Volume. (1.0 is MAX, 0.0 is MIN)</param>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void SetVolume(double volume)
+        public static void SetVolume(float volume)
         {
             currentVol = volume;
             SetVolume((byte)(255 * volume));
@@ -213,10 +213,12 @@ namespace BlueCone.Mp3
         /// <param name="right_channel">The right channel.</param>
         private static void SetVolume(byte volume)
         {
-            ushort vol = (ushort)((255 - volume) << 8 | (255 - volume));
+            ushort vol = (ushort)(((255 - volume) << 8) | (255 - volume));
+            while (!DREQ.Read())
+                Thread.Sleep(1);
             SCIWrite(SCI_VOL, vol);
-            SCIWrite(SCI_WRAMADDR, 0xC001);
-            SCIWrite(SCI_WRAM, vol);
+           // SCIWrite(SCI_WRAMADDR, 0xC001);
+           // SCIWrite(SCI_WRAM, vol);
             Debug.Print(new string(ToHex((byte)vol)));
         }
 
