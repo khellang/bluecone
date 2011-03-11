@@ -58,10 +58,7 @@ namespace BlueCone.Bluetooth
             this.command = (link == Link.Control) ? command : command + "\r\n";
         }
 
-        public BluetoothMessage()
-        {
-
-        }
+        public BluetoothMessage() {}
 
         ~BluetoothMessage()
         {

@@ -17,23 +17,27 @@ namespace BlueCone.Utils
 
         #region Fields
 
-        private static VolumeInfo SDVolInfo = Settings.SDVolume;        
+        private static VolumeInfo SDVolInfo = Settings.SDVolume;
+      
         #endregion
 
         public static void SaveInfo()
         {
-            if (File.Exists(@"\SD\fileinfo.txt"))
-                File.Delete(@"\SD\fileinfo.txt");
+            string filename = "fileinfo.txt";
 
-            FileStream fs = new FileStream(@"\SD\fileinfo.txt", FileMode.OpenOrCreate, FileAccess.Write);
+            Debug.Print("Writing to ID3 info to " + filename);
+
+            if (File.Exists(@"\SD\" + filename))
+                File.Delete(@"\SD\" + filename);
+
+            FileStream fs = new FileStream(@"\SD\" + filename, FileMode.OpenOrCreate, FileAccess.Write);
             StreamWriter sw = new StreamWriter(fs);
             foreach (string track in DirectoryEx.GetFiles(@"\USB\"))
             {
                 ID3Tag temp = ID3TagReader.ReadFile(track);
                 sw.WriteLine(temp.Path + "|" + temp.Artist + "|" + temp.Album + "|" + temp.Title);
             }
-        
-            sw.Flush();
+
             sw.Close();
            
             Debug.Print("Finished writing to file");

@@ -24,11 +24,20 @@ namespace BlueCone.Utils.ID3
         /// <returns>String array with path, artist, album and title</returns>
         public static ID3Tag ReadFile(string path)
         {
-            ID3v1 tag = new ID3v1(path);
-            if (tag.HasTag)
-                return tag;
-            else
-                return null;
+            using (ID3v1 tag = new ID3v1(path))
+            {
+                if (tag.IsComplete)
+                    return tag;
+                else
+                    return null;
+            }
+            using (ID3v2 tag = new ID3v2(path))
+            {
+                if (tag.IsComplete)
+                    return tag;
+                else
+                    return null;
+            }
         }
 
         #endregion

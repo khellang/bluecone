@@ -55,6 +55,7 @@
     <Compile Include="Mp3\Playlist.cs" />
     <Compile Include="Utils\ID3\ID3TagStream.cs" />
     <Compile Include="Utils\ID3\ID3v1.cs" />
+    <Compile Include="Utils\ID3\ID3v2.cs" />
     <Compile Include="Utils\Mp3Info.cs" />
     <Compile Include="Utils\PriorityQueue.cs" />
     <Compile Include="Utils\QueueItem.cs" />
