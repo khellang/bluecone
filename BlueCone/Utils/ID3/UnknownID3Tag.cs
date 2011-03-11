@@ -56,7 +56,7 @@ namespace BlueCone.Utils.ID3
         public UnknownID3Tag(string path)
         {
             this.path = path;
-            this.title = path;
+            this.title = System.IO.Path.GetFileNameWithoutExtension(path);
             this.artist = "Unknown";
             this.album = "Unknown";
             this.isComplete = true;
