@@ -93,6 +93,13 @@ namespace BlueCone.Utils.ID3
 
                 ReadFrames(fs, fs.ReadSize());
                 fs.Close();
+                string tempPath = System.IO.Path.GetFileNameWithoutExtension(path);
+                if (title == "" || title == null)
+                    title = tempPath;
+                if (artist == "" || artist == null)
+                    artist = "Unknown";
+                if (album == "" || album == null)
+                    album = "Unknown";
             }
         }
 

@@ -1,5 +1,5 @@
 using System;
-using System.IO;
+using Microsoft.SPOT;
 
 //-----------------------------------------------------------------------
 //  BlueCone Bacheloroppgave Våren 2011
@@ -8,10 +8,7 @@ using System.IO;
 
 namespace BlueCone.Utils.ID3
 {
-    /// <summary>
-    /// Partial ID3v1 Frame.
-    /// </summary>
-    public class ID3v1 : ID3Tag, IDisposable
+    public class UnknownID3Tag : ID3Tag, IDisposable
     {
         #region Fields
 
@@ -56,35 +53,16 @@ namespace BlueCone.Utils.ID3
 
         #region Ctor
 
-        public ID3v1(string path)
+        public UnknownID3Tag(string path)
         {
             this.path = path;
-            using (ID3TagFileStream fs = new ID3TagFileStream(path, FileMode.Open, FileAccess.Read))
-            {
-                if (!fs.HaveID3v1())
-                {
-                    fs.Close();
-                    isComplete = false;
-                    return;
-                }
-                title = fs.ReadText(30);
-                fs.Seek(-95, SeekOrigin.End);
-                artist = fs.ReadText(30);
-                fs.Seek(-65, SeekOrigin.End);
-                album = fs.ReadText(30);
-                fs.Close();
-                string tempPath = System.IO.Path.GetFileNameWithoutExtension(path);
-                if (title == "" || title == null)
-                    title = tempPath;
-                if (artist == "" || artist == null)
-                    artist = "Unknown";
-                if (album == "" || album == null)
-                    album = "Unknown";
-                isComplete = true;
-            }
+            this.title = path;
+            this.artist = "Unknown";
+            this.album = "Unknown";
+            this.isComplete = true;
         }
 
-        ~ID3v1()
+        ~UnknownID3Tag()
         {
             Dispose(true);
         }
