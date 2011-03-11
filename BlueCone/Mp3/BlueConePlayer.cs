@@ -143,7 +143,7 @@ namespace BlueCone.Mp3
 
                 Debug.Print("BlueConePlayer: Sending " + totalFiles + " tracks to link " + connection.Link);
                 connection.SendMessage("LISTSTART#" + totalFiles);
-                FileStream fs = new FileStream("\\SD\\fileinfo.txt", FileMode.Open, FileAccess.Read, FileShare.None, 512);
+                FileStream fs = new FileStream("\\SD\\fileinfo3.txt", FileMode.Open, FileAccess.Read, FileShare.None, 512);
                 StreamReader sr = new StreamReader(fs);
                 string file;
                 //while ((file = sr.ReadLine()) != null)

@@ -11,12 +11,12 @@ namespace BlueCone.Utils.ID3
     /// <summary>
     /// Interface for ID3Tags
     /// </summary>
-    public interface ID3Tag
+    public interface ID3Tag : IDisposable
     {
         string Path { get; }
         string Title { get; }
         string Artist { get; }
         string Album { get; }
-        bool HasTag { get; }
+        bool IsComplete { get; }
     }
 }
