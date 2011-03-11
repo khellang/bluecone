@@ -36,6 +36,7 @@ namespace BlueCone.Utils
             {
                 ID3Tag temp = ID3TagReader.ReadFile(track);
                 sw.WriteLine(temp.Path + "|" + temp.Artist + "|" + temp.Album + "|" + temp.Title);
+                temp.Dispose();
             }
 
             sw.Close();
