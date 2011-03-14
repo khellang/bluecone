@@ -93,14 +93,11 @@ namespace BlueCone.Mp3
 
             Reset();
 
-            Debug.Print("HDAT0: " + SCIRead(SCI_HDAT0));
-            Debug.Print("HDAT1: " + SCIRead(SCI_HDAT1));
-
             SCIWrite(SCI_MODE, SM_SDINEW);
             SCIWrite(SCI_CLOCKF, 0x98 << 8);
             SCIWrite(SCI_VOL, 0x2828);
 
-            StopPlayback();
+            //ClearPlayback();
 
             if (SCIRead(SCI_VOL) != (0x2828))
             {
@@ -170,18 +167,18 @@ namespace BlueCone.Mp3
             //Debug.Print("VS1053: " + data.Length + " bytes of data sent. Decode time: " + SCIRead(SCI_DECODE_TIME));
         }
 
-        public static void StopPlayback()
-        {
-            uint endFillByte = WRAMRead(para_endFillByte);
-            for(int n=0; n<2052; n++) SDIWrite((byte)(0xFF & endFillByte));
-            SCIWrite(SCI_MODE,(SM_SDINEW | SM_CANCEL));
-            for(int n=0; n<2048; n++) SDIWrite((byte)(0xFF & endFillByte));
-            Reset();
-        }
-
         #endregion
 
         #region Private Methods
+
+        private static void ClearPlayback()
+        {
+            Debug.Print("ClearPlayback");
+            uint endFillByte = WRAMRead(para_endFillByte);
+            do
+                for (int n = 0; n < 2052; n++) SDIWrite((byte)(0xFF & endFillByte));
+            while (SCIRead(SCI_HDAT0) != 0 && SCIRead(SCI_HDAT1) != 0);
+        }
 
         /// <summary>
         /// Method from reading from WRAM.
@@ -219,20 +216,6 @@ namespace BlueCone.Mp3
             SCIWrite(SCI_VOL, vol);
            // SCIWrite(SCI_WRAMADDR, 0xC001);
            // SCIWrite(SCI_WRAM, vol);
-            Debug.Print(new string(ToHex((byte)vol)));
-        }
-
-        static char[] hexDigits = {
-'0', '1', '2', '3', '4', '5', '6', '7',
-'8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
-
-        public static char[] ToHex(byte convertByte)
-        {
-            char[] chars = new char[2];
-            int b = convertByte;
-            chars[0] = hexDigits[b >> 4];
-            chars[1] = hexDigits[b & 0xF];
-            return chars;
         }
 
         /// <summary>

@@ -86,11 +86,9 @@ namespace BlueCone.Utils.ID3
                 }
 
                 version = fs.ReadVersion(); // Read ID3v2 version
-                // Throw away flags
-                fs.ReadByte();
+                fs.ReadByte(); // Throw away flags byte
 
-                // Extended Header Must Read Here
-
+                // Read frames
                 ReadFrames(fs, fs.ReadSize());
                 fs.Close();
                 string tempPath = System.IO.Path.GetFileNameWithoutExtension(path);
@@ -122,12 +120,13 @@ namespace BlueCone.Utils.ID3
             string frameID;
             int frameLength;
             byte buffer;
+            // Check version for frameID length
             int frameIDLength = version.Minor == 2 ? 3 : 4;
 
             // Minimum frame size is 10 because frame header is 10 byte
             while (length > 10 && !isComplete)
             {
-                // check for padding( 00 bytes )
+                // Remove padding
                 buffer = dataStream.ReadByte();
                 if (buffer == 0)
                 {
@@ -135,10 +134,10 @@ namespace BlueCone.Utils.ID3
                     continue;
                 }
 
-                // if read byte is not zero. it must read as FrameID
+                // If byte is nor zero, read frameID
                 dataStream.Seek(-1, SeekOrigin.Current);
 
-                // ---------- Read Frame Header -----------------------
+                // Read frame header
                 frameID = dataStream.ReadText(frameIDLength);
                 if (frameIDLength == 3 && frameIDs.Contains(frameID))
                     frameID = (string)frameIDs[frameID];

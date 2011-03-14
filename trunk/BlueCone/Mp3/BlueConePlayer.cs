@@ -33,6 +33,7 @@ namespace BlueCone.Mp3
         private static VolumeInfo volInfo;
 
         private static string currentTrackPath;
+        private static bool cancelPlayback = false;
 
         #endregion
 
@@ -107,7 +108,7 @@ namespace BlueCone.Mp3
         /// </summary>
         public static void Next()
         {
-           
+
         }
 
         /// <summary>
@@ -235,8 +236,15 @@ namespace BlueCone.Mp3
                         Debug.Print("BlueConePlayer: Playing \"" + song + "\"");
                         LED.State = LEDState.Playing;
                         file = File.OpenRead(song);
+                        while (cancelPlayback)
+                        {
+                            Debug.Print("Waiting for cancelPlayback...");
+                            Thread.Sleep(1);
+                        }
                         do
                         {
+                            if (cancelPlayback)
+                                break;
                             size = file.Read(buffer, 0, buffer.Length);
                             VS1053.SendData(buffer);
                         } while (size > 0);
@@ -254,6 +262,11 @@ namespace BlueCone.Mp3
                         break;
                 }
             }
+        }
+
+        private static void VS1053_PlaybackCanceled()
+        {
+            cancelPlayback = false;
         }
 
         /// <summary>
@@ -294,11 +307,10 @@ namespace BlueCone.Mp3
          
             volInfo = e.Volume;
             Mp3Info.SaveInfo();
-               foreach (Connection connection in WT32.Connections.Values)
-               {
-                   SendTracks(connection);
-               }
-            
+            foreach (Connection connection in WT32.Connections.Values)
+            {
+                SendTracks(connection);
+            } 
         }
 
         /// <summary>

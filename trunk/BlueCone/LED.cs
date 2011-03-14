@@ -55,22 +55,22 @@ namespace BlueCone
                 switch (state)
                 {
                     case LEDState.Initializing:
-                        ledPort.Write(false);
-                        Thread.Sleep(1000);
                         ledPort.Write(true);
+                        Thread.Sleep(1000);
+                        ledPort.Write(false);
                         Thread.Sleep(1000);
                         break;
                     case LEDState.Ready:
-                        if (ledPort.Read())
+                        if (!ledPort.Read())
                         {
-                            ledPort.Write(false);
+                            ledPort.Write(true);
                         }
                         Thread.Sleep(50);
                         break;
                     case LEDState.Playing:
-                        ledPort.Write(false);
-                        Thread.Sleep(500);
                         ledPort.Write(true);
+                        Thread.Sleep(500);
+                        ledPort.Write(false);
                         Thread.Sleep(500);
                         break;
                     default:
