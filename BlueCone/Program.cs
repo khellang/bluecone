@@ -28,7 +28,6 @@ namespace BlueCone
             Thread.Sleep(500);
             WT32.Initialize();
             WT32.MessageReceived += new MessageReceivedEventHandler(BlueConeMessageReceived);
-            LED.State = LEDState.Ready;
             Thread.Sleep(Timeout.Infinite);
         }
 
@@ -38,7 +37,7 @@ namespace BlueCone
             switch (tmp[0].Trim())
             {
                 case "NEXT":
-                    Debug.Print("NEXT");
+                    //VS1053.StopPlayback();
                     break;
                 case "PLAY":
                     Debug.Print("PLAY");

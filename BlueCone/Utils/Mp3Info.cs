@@ -40,7 +40,8 @@ namespace BlueCone.Utils
             }
 
             sw.Close();
-           
+
+            LED.State = LEDState.Ready;
             Debug.Print("Finished writing to file");
         }
         
