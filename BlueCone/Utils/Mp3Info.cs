@@ -25,7 +25,7 @@ namespace BlueCone.Utils
         {
             string filename = "fileinfo.txt";
 
-            Debug.Print("Writing to ID3 info to " + filename);
+            Debug.Print("Writing ID3 info to " + filename);
 
             if (File.Exists(@"\SD\" + filename))
                 File.Delete(@"\SD\" + filename);
@@ -34,9 +34,12 @@ namespace BlueCone.Utils
             StreamWriter sw = new StreamWriter(fs);
             foreach (string track in DirectoryEx.GetFiles(@"\USB\"))
             {
-                ID3Tag temp = ID3TagReader.ReadFile(track);
-                sw.WriteLine(temp.Path + "|" + temp.Artist + "|" + temp.Album + "|" + temp.Title);
-                temp.Dispose();
+                //if (track.Length > 4 && track.Substring(track.Length - 3).ToLower() == "mp3")
+                //{
+                    ID3Tag temp = ID3TagReader.ReadFile(track);
+                    sw.WriteLine(temp.Path + "|" + temp.Artist + "|" + temp.Album + "|" + temp.Title);
+                    temp.Dispose();
+                //}
             }
 
             sw.Close();

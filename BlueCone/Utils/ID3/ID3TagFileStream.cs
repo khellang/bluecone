@@ -21,21 +21,24 @@ namespace BlueCone.Utils.ID3
 
         public string ReadText(int length)
         {
-            using (MemoryStream ms = new MemoryStream())
-            {
+            //using (MemoryStream ms = new MemoryStream())
+            //{
                 int maxLength = length;
                 byte readByte;
+                string ret = "";
                 while (maxLength > 0)
                 {
                     readByte = ReadByte();
                     if (readByte != 0)
-                        ms.WriteByte(readByte);
+                        ret += (char)readByte;
+                        //ms.WriteByte(readByte);
                     maxLength--;
                 }
                 if (maxLength < 0)
                     base.Position += maxLength;
-                return new string(Encoding.UTF8.GetChars(ms.ToArray()));
-            }
+                //return new string(Encoding.UTF8.GetChars(ms.ToArray()));
+                return ret.Trim();
+            //}
         }
 
         public new byte ReadByte()
