@@ -50,7 +50,10 @@ namespace BlueCone.Utils
             {
                 foreach (string file in this)
                 {
-                    totalFiles++;
+                    if (file.Length > 4 && file.Substring(file.Length - 3).ToLower() == "mp3")
+                    {
+                        totalFiles++;
+                    }
                 }
                 return totalFiles;
             }

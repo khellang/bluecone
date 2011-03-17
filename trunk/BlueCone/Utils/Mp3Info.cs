@@ -34,12 +34,12 @@ namespace BlueCone.Utils
             StreamWriter sw = new StreamWriter(fs);
             foreach (string track in DirectoryEx.GetFiles(@"\USB\"))
             {
-                //if (track.Length > 4 && track.Substring(track.Length - 3).ToLower() == "mp3")
-                //{
+                if (track.Length > 4 && track.Substring(track.Length - 3).ToLower() == "mp3")
+                {
                     ID3Tag temp = ID3TagReader.ReadFile(track);
                     sw.WriteLine(temp.Path + "|" + temp.Artist + "|" + temp.Album + "|" + temp.Title);
                     temp.Dispose();
-                //}
+                }
             }
 
             sw.Close();
