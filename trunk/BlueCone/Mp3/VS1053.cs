@@ -133,6 +133,16 @@ namespace BlueCone.Mp3
             }
         }
 
+        public static ushort GetByteRate()
+        {
+            return WRAMRead(para_byteRate);
+        }
+
+        public static ushort GetDecodeTime()
+        {
+            return SCIRead(SCI_DECODE_TIME);
+        }
+
         /// <summary>
         /// Method for setting the volume.
         /// </summary>
@@ -165,6 +175,20 @@ namespace BlueCone.Mp3
                 spi.Write(block);
             }
             //Debug.Print("VS1053: " + data.Length + " bytes of data sent. Decode time: " + SCIRead(SCI_DECODE_TIME));
+        }
+
+        /// <summary>
+        /// Method for doing a soft reset of the module.
+        /// </summary>
+        public static void Reset()
+        {
+            while (!DREQ.Read())
+                Thread.Sleep(1);
+            SCIWrite(SCI_MODE, (ushort)(SM_SDINEW | SM_RESET));
+            Thread.Sleep(1);
+            while (!DREQ.Read())
+                Thread.Sleep(1);
+            Thread.Sleep(100);
         }
 
         #endregion
@@ -216,18 +240,6 @@ namespace BlueCone.Mp3
             SCIWrite(SCI_VOL, vol);
            // SCIWrite(SCI_WRAMADDR, 0xC001);
            // SCIWrite(SCI_WRAM, vol);
-        }
-
-        /// <summary>
-        /// Method for doing a soft reset of the module.
-        /// </summary>
-        private static void Reset()
-        {
-            while (!DREQ.Read());
-            SCIWrite(SCI_MODE, (ushort)(SM_SDINEW | SM_RESET));
-            Thread.Sleep(1);
-            while (!DREQ.Read());
-            Thread.Sleep(100);
         }
 
         private static void SDIWrite(byte datum)
