@@ -71,6 +71,11 @@ namespace BlueCone.Mp3
             return tmp;
         }
 
+        public int Remove(string path)
+        {
+            return thePlaylist.Remove(path);
+        }
+
         [MethodImpl(MethodImplOptions.Synchronized)]
         public string[] GetPlaylist()
         {

@@ -131,6 +131,11 @@ namespace BlueCone.Mp3
             WT32.BroadcastMessage("QUEUE#" + pos + "|" + path);
         }
 
+        public static int RemoveTrack(string path)
+        {
+            return playlist.Remove(path);
+        }
+
         /// <summary>
         /// This method sends all the tracks to the specified connection.
         /// </summary>
