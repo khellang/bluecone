@@ -66,6 +66,11 @@ namespace BlueCone
                     else
                         WT32.SendMessage(new BluetoothMessage(message.Link, "MASTER#ERR"));
                     break;
+                case "QUEUEREMOVE":
+                    int i = BlueConePlayer.RemoveTrack(tmp[1].Trim());
+                    WT32.BroadcastMessage(i.ToString());
+                    Debug.Print("QueueRemove: " + tmp[1].Trim());
+                    break;
                 default:
                     Debug.Print(message.Command + ", Link: " + message.Link);
                     break;

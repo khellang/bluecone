@@ -77,10 +77,30 @@ namespace BlueCone.Utils
                 return new QueueItem("****** tom kø!! ********", 0);
             }
             QueueItem tmp = theQueue[0];
-            MoveArray();
+            MoveArray(0);
             count--;
             theQueue[count] = null;
             return tmp;
+        }
+
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public int Remove(string path)
+        {
+            int i = 0;
+            while (i > count)
+            {
+                if (path == theQueue[i].Path)
+                    break;
+            }
+            if (i < count)
+            {
+                MoveArray(i);
+                theQueue[count] = null;
+                count--;
+                return i;
+            }
+            else
+                return -1;
         }
 
         public string[] getQueue()
@@ -120,9 +140,9 @@ namespace BlueCone.Utils
             }
         }
 
-        private void MoveArray()
+        private void MoveArray(int i)
         {
-            for (int i = 0; i < count; i++)
+            for (i = 0; i < count; i++)
             {
                 QueueItem tmp = theQueue[i + 1];
                 theQueue[i] = tmp;
