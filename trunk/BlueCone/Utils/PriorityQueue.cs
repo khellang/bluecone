@@ -143,7 +143,7 @@ namespace BlueCone.Utils
 
         private void MoveArray(int i)
         {
-            for (i = 0; i < count; i++)
+            for (; i < count; i++)
             {
                 QueueItem tmp = theQueue[i + 1];
                 theQueue[i] = tmp;
