@@ -91,6 +91,7 @@ namespace BlueCone.Utils
             {
                 if (path == theQueue[i].Path)
                     break;
+                i++;
             }
             if (i < count)
             {
