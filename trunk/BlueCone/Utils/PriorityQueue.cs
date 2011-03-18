@@ -87,7 +87,7 @@ namespace BlueCone.Utils
         public int Remove(string path)
         {
             int i = 0;
-            while (i > count)
+            while (i < count)
             {
                 if (path == theQueue[i].Path)
                     break;
