@@ -236,7 +236,9 @@ namespace BlueCone.Mp3
                         waitHandle.Reset();
                         string song = playlist.Dequeue();
                         currentTrackPath = song;
-                        WT32.BroadcastMessage("REMOVE");
+                        WT32.BroadcastMessage("REMOVE#0");
+                        //test
+                        WT32.BroadcastMessage("PLAYING#"+song);
                         Debug.Print("BlueConePlayer: Playing \"" + song + "\"");
                         LED.State = LEDState.Playing;
                         file = File.OpenRead(song);
