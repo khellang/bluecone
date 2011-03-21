@@ -5,6 +5,7 @@ using Microsoft.SPOT.IO;
 using System.IO;
 using System.Xml;
 using BlueCone.Bluetooth;
+using System.Ext.Xml;
 
 //-----------------------------------------------------------------------
 //  BlueCone Bacheloroppgave Våren 2011
@@ -25,6 +26,8 @@ namespace BlueCone.Utils
         private static string pairingKey = "1234";
         private static bool playRandom = true;
         private static double volume = 1;
+
+        private static string path = @"\SD\settings.xml";
 
         #endregion
 
@@ -103,7 +106,6 @@ namespace BlueCone.Utils
         #endregion
 
         #region Methods
-        
 
         public static void Load()
         {
@@ -119,7 +121,6 @@ namespace BlueCone.Utils
         {
             if (e.Volume.RootDirectory == @"\SD")
             {
-                string path = @"\SD\settings.xml";
                 SDVolInfo = e.Volume;
                 if (File.Exists(path))
                 {
@@ -160,7 +161,27 @@ namespace BlueCone.Utils
 
         public static void Save()
         {
+            if (!File.Exists(path))
+            {
+                File.Create(path);
+                using (FileStream settingStream = new FileStream(path, FileMode.Open, FileAccess.Write))
+                using (XmlWriter writer = XmlWriter.Create(settingStream))
+                {
+                    writer.WriteStartElement("settings");
 
+                    writer.WriteElementString("usePriority", usePriority.ToString());
+                    writer.WriteElementString("masterPassword", masterPassword);
+                    writer.WriteElementString("pairingKey", pairingKey);
+                    writer.WriteElementString("playRandom", playRandom.ToString());
+                    writer.WriteElementString("volume", volume.ToString());
+
+                    writer.WriteEndElement();
+
+                    writer.Close();
+                    settingStream.Close();
+                }
+                Debug.Print("BlueCone: Settings saved.");
+            }
         }
 
 

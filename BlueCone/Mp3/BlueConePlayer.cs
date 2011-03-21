@@ -245,13 +245,15 @@ namespace BlueCone.Mp3
                         //long fileSize = file.Length;
                         //ushort byteRate;
                         //ushort decodeTime;
+                        //float pos;
                         do
                         {
                             size = file.Read(buffer, 0, buffer.Length);
                             VS1053.SendData(buffer);
                             //decodeTime = VS1053.GetDecodeTime();
                             //byteRate = VS1053.GetByteRate();
-                            //Debug.Print("Position in track: " + ((float)(byteRate * decodeTime) / (float)fileSize) * 100 + "%");
+                            //pos = ((float)(byteRate * decodeTime) / (float)fileSize) * 100;
+                            //Debug.Print("Position in track: " + pos + "%");
                         } while (size > 0);
                         VS1053.Reset();
                         currentTrackPath = null;

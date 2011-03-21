@@ -30,19 +30,22 @@ namespace BlueCone.Utils
             if (File.Exists(@"\SD\" + filename))
                 File.Delete(@"\SD\" + filename);
 
-            FileStream fs = new FileStream(@"\SD\" + filename, FileMode.OpenOrCreate, FileAccess.Write);
-            StreamWriter sw = new StreamWriter(fs);
-            foreach (string track in DirectoryEx.GetFiles(@"\USB\"))
+            using (FileStream fs = new FileStream(@"\SD\" + filename, FileMode.OpenOrCreate, FileAccess.Write))
             {
-                if (track.Length > 4 && track.Substring(track.Length - 3).ToLower() == "mp3")
+                StreamWriter sw = new StreamWriter(fs);
+                foreach (string track in DirectoryEx.GetFiles(@"\USB\"))
                 {
-                    ID3Tag temp = ID3TagReader.ReadFile(track);
-                    sw.WriteLine(temp.Path + "|" + temp.Artist + "|" + temp.Album + "|" + temp.Title);
-                    temp.Dispose();
+                    if (track.Length > 4 && track.Substring(track.Length - 3).ToLower() == "mp3")
+                    {
+                        ID3Tag temp = ID3TagReader.ReadFile(track);
+                        sw.WriteLine(temp.Path + "|" + temp.Artist + "|" + temp.Album + "|" + temp.Title);
+                        temp.Dispose();
+                    }
                 }
-            }
 
-            sw.Close();
+                sw.Close();
+                fs.Close();
+            }
 
             LED.State = LEDState.Ready;
             Debug.Print("Finished writing to file");

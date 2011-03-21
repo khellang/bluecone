@@ -68,7 +68,7 @@ namespace BlueCone
                     break;
                 case "QUEUEREMOVE":
                     int i = BlueConePlayer.RemoveTrack(tmp[1].Trim());
-                    WT32.BroadcastMessage("REMOVE#" + i.ToString());
+                    WT32.BroadcastMessage("REMOVE#" + i);
                     Debug.Print("QueueRemove: " + tmp[1].Trim());
                     break;
                 default:
