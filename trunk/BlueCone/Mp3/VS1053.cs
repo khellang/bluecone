@@ -29,6 +29,7 @@ namespace BlueCone.Mp3
         private static byte[] cmdBuffer = new byte[4];
 
         private static float currentVol = 10f;
+        private static bool cancelPlayback;
 
         #endregion
 
@@ -82,6 +83,8 @@ namespace BlueCone.Mp3
         /// </summary>
         public static void Initialize()
         {
+            cancelPlayback = false;
+
             SPI.SPI_module spi_module;
             spi_module = SPI.SPI_module.SPI1;
 
@@ -164,17 +167,36 @@ namespace BlueCone.Mp3
         {
             int size = data.Length - data.Length % 32;
 
-            spi.Config = dataConfig;
+            if (cancelPlayback)
+            {
+                Debug.Print("Wrote SM_CANCEL");
+                SCIWrite(SCI_MODE, SM_CANCEL);
+            }
+
             for (int i = 0; i < size; i += 32)
             {
-                while (!DREQ.Read())
-                    Thread.Sleep(1);
-
                 Array.Copy(data, i, block, 0, 32);
-
-                spi.Write(block);
+                SDIWrite(block);
+                //Debug.Print("Wrote 32 bytes of data");
+                if (cancelPlayback)
+                {
+                    ushort CANCEL = SCIRead(SCI_MODE);
+                    Debug.Print("Checking if SM_CANCEL has cleared (" + CANCEL + ")");
+                    if (CANCEL != SM_CANCEL)
+                    {
+                        Debug.Print("SM_CANCEL cleared");
+                        StopPlayback();
+                        break;
+                    }
+                    else
+                        Debug.Print("SM_CANCEL has not cleared yet...");
+                }
             }
-            //Debug.Print("VS1053: " + data.Length + " bytes of data sent. Decode time: " + SCIRead(SCI_DECODE_TIME));
+        }
+
+        public static void CancelPlayback()
+        {
+            cancelPlayback = true;
         }
 
         /// <summary>
@@ -191,18 +213,29 @@ namespace BlueCone.Mp3
             Thread.Sleep(100);
         }
 
+        public static void StopPlayback()
+        {
+            Debug.Print("Stopping playback");
+            uint endFillByte = WRAMRead(para_endFillByte);
+            Debug.Print("Read endFillByte: " + endFillByte);
+            ushort HDAT0;
+            ushort HDAT1;
+            do
+            {
+                for (int n = 0; n < 2052; n++) SDIWrite((byte)(0xFF & endFillByte));
+                Debug.Print("Sent 2052 endFillByte, checking HDAT0 and HDAT1");
+                HDAT0 = SCIRead(SCI_HDAT0);
+                HDAT1 = SCIRead(SCI_HDAT1);
+                Debug.Print("HDAT0: " + HDAT0 + ", HDAT1: " + HDAT1);
+            }
+            while (HDAT0 != 0 && HDAT1 != 0);
+            cancelPlayback = false;
+            BlueConePlayer.CancelPlayback = false;
+        }
+
         #endregion
 
         #region Private Methods
-
-        private static void ClearPlayback()
-        {
-            Debug.Print("ClearPlayback");
-            uint endFillByte = WRAMRead(para_endFillByte);
-            do
-                for (int n = 0; n < 2052; n++) SDIWrite((byte)(0xFF & endFillByte));
-            while (SCIRead(SCI_HDAT0) != 0 && SCIRead(SCI_HDAT1) != 0);
-        }
 
         /// <summary>
         /// Method from reading from WRAM.
@@ -238,14 +271,28 @@ namespace BlueCone.Mp3
             while (!DREQ.Read())
                 Thread.Sleep(1);
             SCIWrite(SCI_VOL, vol);
-           // SCIWrite(SCI_WRAMADDR, 0xC001);
-           // SCIWrite(SCI_WRAM, vol);
         }
 
-        private static void SDIWrite(byte datum)
+        /// <summary>
+        /// Method for writing data to the decoder.
+        /// </summary>
+        /// <param name="writeBytes">Bytes to write.</param>
+        private static void SDIWrite(byte[] writeBytes)
         {
-            while (!DREQ.Read()) ;
-            spi.Write(new byte[] { datum });
+            if (spi.Config != dataConfig)
+                spi.Config = dataConfig;
+            while (!DREQ.Read())
+                Thread.Sleep(1);
+            spi.Write(writeBytes);
+        }
+
+        /// <summary>
+        /// Method for writing a single byte to the decoder.
+        /// </summary>
+        /// <param name="writeByte">Byte to write.</param>
+        private static void SDIWrite(byte writeByte)
+        {
+            SDIWrite(new byte[] { writeByte });
         }
 
         /// <summary>
