@@ -37,7 +37,7 @@ namespace BlueCone
             switch (tmp[0].Trim())
             {
                 case "NEXT":
-                    //VS1053.StopPlayback();
+                    BlueConePlayer.Next();
                     break;
                 case "PLAY":
                     Debug.Print("PLAY");
