@@ -6,6 +6,8 @@ using System.IO.Ports;
 using System.Text;
 using BlueCone.Bluetooth;
 using BlueCone.Mp3;
+using Microsoft.SPOT.Hardware;
+using GHIElectronics.NETMF.FEZ;
 
 //-----------------------------------------------------------------------
 //  BlueCone Bacheloroppgave Våren 2011
@@ -17,6 +19,7 @@ namespace BlueCone
     public class Program
     {
         static string[] tmp;
+        static InterruptPort button;
 
         public static void Main() 
         {
@@ -28,7 +31,14 @@ namespace BlueCone
             Thread.Sleep(500);
             WT32.Initialize();
             WT32.MessageReceived += new MessageReceivedEventHandler(BlueConeMessageReceived);
+            button = new InterruptPort((Cpu.Pin)FEZ_Pin.Digital.Di6, true, Port.ResistorMode.PullUp, Port.InterruptMode.InterruptEdgeLow);
+            button.OnInterrupt += new NativeEventHandler(button_OnInterrupt);
             Thread.Sleep(Timeout.Infinite);
+        }
+
+        static void button_OnInterrupt(uint data1, uint data2, DateTime time)
+        {
+            BlueConePlayer.Next();
         }
 
         private static void BlueConeMessageReceived(BluetoothMessage message)
