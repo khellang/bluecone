@@ -8,6 +8,8 @@ using System.Runtime.CompilerServices;
 using System.IO;
 using BlueCone.Mp3;
 using BlueCone.Utils;
+using Microsoft.SPOT.Hardware;
+using GHIElectronics.NETMF.FEZ;
 
 //-----------------------------------------------------------------------
 //  BlueCone Bacheloroppgave Våren 2011
@@ -34,6 +36,8 @@ namespace BlueCone.Bluetooth
         private static byte[] sendBuffer;
         private static Hashtable connections;
         private static Thread readDataThread;
+
+        private static OutputPort RESET = new OutputPort((Cpu.Pin)FEZ_Pin.Digital.Di8, false);
 
         public static event MessageReceivedEventHandler MessageReceived;
 
