@@ -77,8 +77,8 @@ namespace BlueCone.Utils
                 return new QueueItem("****** tom kø!! ********", 0);
             }
             QueueItem tmp = theQueue[0];
-            MoveArray(0);
             count--;
+            MoveArray(0);
             theQueue[count] = null;
             return tmp;
         }
@@ -89,19 +89,18 @@ namespace BlueCone.Utils
             int i = 0;
             while (i < count)
             {
-                if (path == theQueue[i].Path)
-                    break;
+                if (path == theQueue[i].Path || path.Equals(theQueue[i].Path))
+                {
+                    count--;
+                    MoveArray(i);
+                    theQueue[count] = null;
+                    return i;
+                }
+                   
                 i++;
             }
-            if (i < count)
-            {
-                MoveArray(i);
-                theQueue[count] = null;
-                count--;
-                return i;
-            }
-            else
-                return -1;
+
+            return -1;
         }
 
         public string[] getQueue()
@@ -143,11 +142,22 @@ namespace BlueCone.Utils
 
         private void MoveArray(int i)
         {
-            for (; i < count; i++)
+
+            try
             {
-                QueueItem tmp = theQueue[i + 1];
-                theQueue[i] = tmp;
+                for (; i < count; i++)
+                {
+                    QueueItem tmp = theQueue[i + 1];
+                    theQueue[i] = tmp;
+                }
             }
+            catch (IndexOutOfRangeException e)
+            {
+                Debug.Print("Feil index");
+                Debug.Print(e.ToString());
+            }
+    
+           
         }
 
         #endregion

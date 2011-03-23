@@ -119,44 +119,44 @@ namespace BlueCone.Utils
 
         static void RemovableMedia_Insert(object sender, MediaEventArgs e)
         {
-            if (e.Volume.RootDirectory == @"\SD")
-            {
-                SDVolInfo = e.Volume;
-                if (File.Exists(path))
-                {
-                    Debug.Print("BlueCone: Settings found. Loading...");
-                    using (FileStream settingStream = File.OpenRead(path))
-                    using (XmlReader reader = XmlReader.Create(settingStream))
-                        while (reader.Read())
-                            if (reader.IsStartElement())
-                            switch (reader.Name)
-                            {
-                                case "usePriority":
-                                    usePriority = Converting.StringToBoolean(reader.ReadString());
-                                    break;
-                                case "masterPassword":
-                                    masterPassword = reader.ReadString();
-                                    break;
-                                case "pairingKey":
-                                    pairingKey = reader.ReadString();
-                                    break;
-                                case "playRandom":
-                                    playRandom = Converting.StringToBoolean(reader.ReadString());
-                                    break;
-                                case "volume":
-                                    volume = double.Parse(reader.ReadString());
-                                    break;
-                                default:
-                                    break;
-                            }
-                    Debug.Print("BlueCone: Settings loaded.");
-                }
-                else
-                {
-                    Debug.Print("BlueCone: Could not find settings. Using default.");
-                    Save();
-                }
-            }
+            //if (e.Volume.RootDirectory == @"\SD")
+            //{
+            //    SDVolInfo = e.Volume;
+            //    if (File.Exists(path))
+            //    {
+            //        Debug.Print("BlueCone: Settings found. Loading...");
+            //        using (FileStream settingStream = File.OpenRead(path))
+            //        using (XmlReader reader = XmlReader.Create(settingStream))
+            //            while (reader.Read())
+            //                if (reader.IsStartElement())
+            //                switch (reader.Name)
+            //                {
+            //                    case "usePriority":
+            //                        usePriority = Converting.StringToBoolean(reader.ReadString());
+            //                        break;
+            //                    case "masterPassword":
+            //                        masterPassword = reader.ReadString();
+            //                        break;
+            //                    case "pairingKey":
+            //                        pairingKey = reader.ReadString();
+            //                        break;
+            //                    case "playRandom":
+            //                        playRandom = Converting.StringToBoolean(reader.ReadString());
+            //                        break;
+            //                    case "volume":
+            //                        volume = double.Parse(reader.ReadString());
+            //                        break;
+            //                    default:
+            //                        break;
+            //                }
+            //        Debug.Print("BlueCone: Settings loaded.");
+            //    }
+            //    else
+            //    {
+            //        Debug.Print("BlueCone: Could not find settings. Using default.");
+            //        Save();
+            //    }
+            //}
         }
 
         public static void Save()
