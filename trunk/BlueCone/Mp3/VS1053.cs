@@ -1,9 +1,9 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Threading;
-using Microsoft.SPOT.Hardware;
 using GHIElectronics.NETMF.FEZ;
 using Microsoft.SPOT;
-using System.Runtime.CompilerServices;
+using Microsoft.SPOT.Hardware;
 
 //-----------------------------------------------------------------------
 //  BlueCone Bacheloroppgave Våren 2011
@@ -154,7 +154,7 @@ namespace BlueCone.Mp3
         public static void SetVolume(float volume)
         {
             currentVol = volume;
-            SetVolume((byte)((8 * volume)+135));
+            SetVolume((byte)((8 * volume) + 135));
             Debug.Print("VS1053: Volume changed to " + volume + ".");
         }
 
@@ -173,6 +173,7 @@ namespace BlueCone.Mp3
                 SCIWrite(SCI_MODE, SM_CANCEL);
             }
 
+            ushort CANCEL = 0;
             for (int i = 0; i < size; i += 32)
             {
                 Array.Copy(data, i, block, 0, 32);
@@ -180,7 +181,7 @@ namespace BlueCone.Mp3
                 //Debug.Print("Wrote 32 bytes of data");
                 if (cancelPlayback)
                 {
-                    ushort CANCEL = SCIRead(SCI_MODE);
+                    CANCEL = SCIRead(SCI_MODE);
                     Debug.Print("Checking if SM_CANCEL has cleared (" + CANCEL + ")");
                     if (CANCEL != SM_CANCEL)
                     {
@@ -192,6 +193,12 @@ namespace BlueCone.Mp3
                         Debug.Print("SM_CANCEL has not cleared yet...");
                 }
             }
+            //if (CANCEL == SM_CANCEL)
+            //{
+            //    Reset();
+            //    cancelPlayback = false;
+            //    BlueConePlayer.CancelPlayback = false;
+            //}
         }
 
         public static void CancelPlayback()
