@@ -111,6 +111,12 @@ namespace BlueCone.Mp3
             return playlist.Remove(path);
         }
 
+
+        public static void UsePriority()
+        {
+
+            playlist.UsePriority();
+        }
         /// <summary>
         /// This method sends all the tracks to the specified connection.
         /// </summary>
