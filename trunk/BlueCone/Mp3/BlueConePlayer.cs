@@ -50,6 +50,10 @@ namespace BlueCone.Mp3
             }
         }
 
+        public static bool PriorityOn
+        {
+            get { return playlist.PriorityOn; }
+        }
         #endregion
 
         #region Methods
@@ -112,10 +116,10 @@ namespace BlueCone.Mp3
         }
 
 
-        public static void UsePriority()
+        public static void UsePriority(bool b)
         {
 
-            playlist.UsePriority();
+            playlist.UsePriority(b);
         }
         /// <summary>
         /// This method sends all the tracks to the specified connection.

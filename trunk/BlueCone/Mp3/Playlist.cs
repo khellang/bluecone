@@ -33,6 +33,10 @@ namespace BlueCone.Mp3
             }
         }
 
+        public bool PriorityOn
+        {
+            get { return thePlaylist.PriorityOn; }
+        }
         #endregion
 
         #region Ctor
@@ -82,9 +86,9 @@ namespace BlueCone.Mp3
             return thePlaylist.getQueue();
         }
 
-        public void UsePriority()
+        public void UsePriority(bool b)
         {
-            thePlaylist.UsePriority();
+            thePlaylist.UsePriority(b);
         }
 
         #endregion
