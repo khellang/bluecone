@@ -82,6 +82,11 @@ namespace BlueCone.Mp3
             return thePlaylist.getQueue();
         }
 
+        public void UsePriority()
+        {
+            thePlaylist.UsePriority();
+        }
+
         #endregion
 
         #region Private Methods

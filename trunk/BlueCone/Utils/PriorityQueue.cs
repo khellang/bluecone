@@ -113,6 +113,12 @@ namespace BlueCone.Utils
             return tmp;
         }
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public void UsePriority()
+        {
+            priorityOn = !priorityOn;
+        }
+
         #endregion
 
         #region Private Methods
@@ -153,7 +159,7 @@ namespace BlueCone.Utils
             }
             catch (IndexOutOfRangeException e)
             {
-                Debug.Print("Feil index");
+                Debug.Print("***************** Feil index ****************");
                 Debug.Print(e.ToString());
             }
     

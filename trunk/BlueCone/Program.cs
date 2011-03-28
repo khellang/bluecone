@@ -58,8 +58,9 @@ namespace BlueCone
                 case "STOP":
                     Debug.Print("STOP");
                     break;
-                case "PREV":
-                    Debug.Print("PREV");
+                case "PRI":
+                    Debug.Print("PRI");
+                    BlueConePlayer.UsePriority();
                     break;
                 case "ADD": // ADD#PATH
                     BlueConePlayer.AddTrack(tmp[1].Trim(), message.Link);
