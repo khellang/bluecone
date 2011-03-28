@@ -39,7 +39,7 @@ namespace BlueCone.Utils
 
         public bool PriorityOn
         {
-            set { priorityOn = value; }
+            get { return priorityOn; }
         }
     
         #endregion
@@ -114,9 +114,9 @@ namespace BlueCone.Utils
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void UsePriority()
+        public void UsePriority(bool b)
         {
-            priorityOn = !priorityOn;
+            priorityOn = b;
         }
 
         #endregion

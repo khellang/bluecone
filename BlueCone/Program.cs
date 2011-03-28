@@ -60,7 +60,15 @@ namespace BlueCone
                     break;
                 case "PRI":
                     Debug.Print("PRI");
-                    BlueConePlayer.UsePriority();
+                    Debug.Print(tmp[1].Trim());
+                    if (tmp[1].Trim() == "0")
+                    {
+                        BlueConePlayer.UsePriority(false);
+                    }
+                    else
+                    {
+                        BlueConePlayer.UsePriority(true);
+                    }
                     break;
                 case "ADD": // ADD#PATH
                     BlueConePlayer.AddTrack(tmp[1].Trim(), message.Link);
@@ -73,7 +81,10 @@ namespace BlueCone
                     break;
                 case "MASTER":
                     if (tmp[1].Trim() == Settings.MasterPassword)
-                        WT32.SendMessage(new BluetoothMessage(message.Link, "MASTER#OK"));
+                    {
+                      
+                          WT32.SendMessage(new BluetoothMessage(message.Link, "MASTER#OK|" + BlueConePlayer.PriorityOn.ToString()));
+                    }
                     else
                         WT32.SendMessage(new BluetoothMessage(message.Link, "MASTER#ERR"));
                     break;
