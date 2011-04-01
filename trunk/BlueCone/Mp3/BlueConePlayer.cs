@@ -101,12 +101,12 @@ namespace BlueCone.Mp3
         /// This method adds a track to the playlist.
         /// </summary>
         /// <param name="path">The path to the song.</param>
-        /// <param name="link">The link that added the song.</param>
-        public static void AddTrack(string path, Link link)
+        /// <param name="macID">The link that added the song.</param>
+        public static void AddTrack(string path, string macID)
         {
-            int pos = playlist.Enqueue(path, link);
+            int pos = playlist.Enqueue(path, macID);
             waitHandle.Set();
-            Debug.Print("Received track \"" + path + "\" from " + link);
+            Debug.Print("Received track \"" + path + "\" from " + macID);
             WT32.BroadcastMessage("QUEUE#" + pos + "|" + path);
         }
 
@@ -301,7 +301,7 @@ namespace BlueCone.Mp3
             Mp3Info.SaveInfo();
             foreach (Connection connection in WT32.Connections.Values)
             {
-                SendTracks(connection,true);
+                SendTracks(connection, true);
             }
         }
 
