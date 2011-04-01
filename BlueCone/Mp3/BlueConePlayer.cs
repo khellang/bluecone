@@ -125,24 +125,27 @@ namespace BlueCone.Mp3
         /// This method sends all the tracks to the specified connection.
         /// </summary>
         /// <param name="connection">The connection to send the tracks to.</param>
-        public static void SendTracks(Connection connection)
+        public static void SendTracks(Connection connection, bool sendAll)
         {
             if (volInfo != null)
             {
-                int totalFiles = DirectoryEx.GetTotalFiles(volInfo.RootDirectory);
-
-                Debug.Print("BlueConePlayer: Sending " + totalFiles + " tracks to link " + connection.Link);
-                connection.SendMessage("LISTSTART#" + totalFiles);
-                FileStream fs = new FileStream("\\SD\\fileinfo.txt", FileMode.Open, FileAccess.Read, FileShare.None, 512);
-                StreamReader sr = new StreamReader(fs);
-                string file;
-                //while ((file = sr.ReadLine()) != null)
-                while ((file = ReadLineEx(sr)) != null)
+                if (sendAll)
                 {
-                    connection.SendMessage("LIST#" + file);
-                }
+                    int totalFiles = DirectoryEx.GetTotalFiles(volInfo.RootDirectory);
 
-                sr.Close();
+                    Debug.Print("BlueConePlayer: Sending " + totalFiles + " tracks to link " + connection.Link);
+                    connection.SendMessage("LISTSTART#" + totalFiles);
+                    FileStream fs = new FileStream("\\SD\\fileinfo.txt", FileMode.Open, FileAccess.Read, FileShare.None, 512);
+                    StreamReader sr = new StreamReader(fs);
+                    string file;
+                    //while ((file = sr.ReadLine()) != null)
+                    while ((file = ReadLineEx(sr)) != null)
+                    {
+                        connection.SendMessage("LIST#" + file);
+                    }
+
+                    sr.Close();
+                }
 
                 if (currentTrackPath != null)
                     connection.SendMessage("PLAYING#" + currentTrackPath);

@@ -1,13 +1,11 @@
-﻿using BlueCone.Utils;
-using Microsoft.SPOT;
-using System;
+﻿using System;
 using System.Threading;
-using System.IO.Ports;
-using System.Text;
 using BlueCone.Bluetooth;
 using BlueCone.Mp3;
-using Microsoft.SPOT.Hardware;
+using BlueCone.Utils;
 using GHIElectronics.NETMF.FEZ;
+using Microsoft.SPOT;
+using Microsoft.SPOT.Hardware;
 
 //-----------------------------------------------------------------------
 //  BlueCone Bacheloroppgave Våren 2011
@@ -21,7 +19,7 @@ namespace BlueCone
         static string[] tmp;
         static InterruptPort button;
 
-        public static void Main() 
+        public static void Main()
         {
             Debug.EnableGCMessages(false);
             Settings.Load();
@@ -93,11 +91,17 @@ namespace BlueCone
                     WT32.BroadcastMessage("REMOVE#" + i);
                     Debug.Print("QueueRemove: " + tmp[1].Trim());
                     break;
+                case "REQ_QUEUE":
+                    BlueConePlayer.SendTracks((Connection)WT32.Connections[message.Link], false);
+                    break;
+                case "REQ_ALL":
+                    BlueConePlayer.SendTracks((Connection)WT32.Connections[message.Link], true);
+                    break;
                 default:
                     Debug.Print(message.Command + ", Link: " + message.Link);
                     break;
             }
             message.Dispose();
-        }     
+        }
     }
 }
