@@ -1,10 +1,7 @@
 using System;
-using Microsoft.SPOT;
 using System.Collections;
-using BlueCone.Utils;
-using BlueCone.Bluetooth;
-using System.Threading;
 using System.Runtime.CompilerServices;
+using BlueCone.Utils;
 //-----------------------------------------------------------------------
 //  BlueCone Bacheloroppgave Våren 2011
 //      Av Terje Knutsen, Stein Arild Høiland og Kristian Hellang
@@ -60,10 +57,10 @@ namespace BlueCone.Mp3
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public int Enqueue(string path, Link link)
+        public int Enqueue(string path, string macID)
         {
-            LinkRegistered(link);
-            GetPriority(link);
+            LinkRegistered(macID);
+            GetPriority(macID);
             int pos = thePlaylist.Add(new QueueItem(path, priorityValue));
             return pos;
         }
@@ -95,22 +92,22 @@ namespace BlueCone.Mp3
 
         #region Private Methods
 
-        private Boolean LinkRegistered(Link link)
+        private Boolean LinkRegistered(string macID)
         {
-            if (myTable.Contains(link))
+            if (myTable.Contains(macID))
                 return true;
             else
             {
-                myTable.Add(link, STARTPRIORITY);
+                myTable.Add(macID, STARTPRIORITY);
                 return false;
             }
         }
 
-        private void GetPriority(Link link)
+        private void GetPriority(string macID)
         {
-            priorityValue = (int)myTable[link]; // **Prøver med static variabel her mtp. garbage collector, må kanskje endres**
-            myTable[link] = priorityValue + 1;
-    //        return priorityValue;   
+            priorityValue = (int)myTable[macID]; // **Prøver med static variabel her mtp. garbage collector, må kanskje endres**
+            myTable[macID] = priorityValue + 1;
+            //        return priorityValue;   
         }
 
         #endregion

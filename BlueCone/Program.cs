@@ -69,7 +69,7 @@ namespace BlueCone
                     }
                     break;
                 case "ADD": // ADD#PATH
-                    BlueConePlayer.AddTrack(tmp[1].Trim(), message.Link);
+                    BlueConePlayer.AddTrack(tmp[1].Trim(), ((Connection)WT32.Connections[message.Link]).Address);
                     break;
                 case "VOLUP":
                     VS1053.VolUp();
@@ -79,10 +79,7 @@ namespace BlueCone
                     break;
                 case "MASTER":
                     if (tmp[1].Trim() == Settings.MasterPassword)
-                    {
-                      
-                          WT32.SendMessage(new BluetoothMessage(message.Link, "MASTER#OK|" + BlueConePlayer.PriorityOn.ToString()));
-                    }
+                        WT32.SendMessage(new BluetoothMessage(message.Link, "MASTER#OK|" + BlueConePlayer.PriorityOn.ToString()));
                     else
                         WT32.SendMessage(new BluetoothMessage(message.Link, "MASTER#ERR"));
                     break;
