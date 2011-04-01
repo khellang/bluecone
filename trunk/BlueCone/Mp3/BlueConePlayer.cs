@@ -243,7 +243,7 @@ namespace BlueCone.Mp3
                         if (decodeTime >= 10 && !DPSSent)
                         {
                             int byteRate = VS1053.GetByteRate();
-                            int playPercent = (int)((double)((double)(decodeTime * byteRate) / file.Length) * 100);
+                            double playPercent = ((double)((double)(decodeTime * byteRate) / file.Length) * 100);
                             if (playPercent > 1)
                             {
                                 WT32.BroadcastMessage("DECODE#" + decodeTime + "|" + playPercent);
@@ -301,7 +301,7 @@ namespace BlueCone.Mp3
             Mp3Info.SaveInfo();
             foreach (Connection connection in WT32.Connections.Values)
             {
-                SendTracks(connection);
+                SendTracks(connection,true);
             }
         }
 
