@@ -1,15 +1,13 @@
 using System;
-using Microsoft.SPOT;
-using System.Text;
-using System.IO.Ports;
-using System.Threading;
 using System.Collections;
+using System.IO.Ports;
 using System.Runtime.CompilerServices;
-using System.IO;
-using BlueCone.Mp3;
+using System.Text;
+using System.Threading;
 using BlueCone.Utils;
-using Microsoft.SPOT.Hardware;
 using GHIElectronics.NETMF.FEZ;
+using Microsoft.SPOT;
+using Microsoft.SPOT.Hardware;
 
 //-----------------------------------------------------------------------
 //  BlueCone Bacheloroppgave Våren 2011
@@ -94,7 +92,7 @@ namespace BlueCone.Bluetooth
         {
             if (!isInitialized)
                 throw new InvalidOperationException("WT32: Please call Initialize() before sending messages.");
-            
+
             sendBuffer = Multiplexing.MUX(message);
             bluetooth.Write(sendBuffer, 0, sendBuffer.Length);
             Debug.Print("WT32: Message \"" + message.Command.Trim() + "\" sent to link " + message.Link + ".");
@@ -117,7 +115,7 @@ namespace BlueCone.Bluetooth
         /// Method for excecuting a controlcommand on the module.
         /// </summary>
         /// <param name="command">The controlcommand. (See iWRAP documentation)</param>
-        [MethodImpl(MethodImplOptions.Synchronized)] 
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public static void ExcecuteCommand(string command)
         {
             if (!isInitialized)
@@ -217,7 +215,7 @@ namespace BlueCone.Bluetooth
                 default:
                     Debug.Print("WT32: " + command);
                     break;
-                    // TODO: Implementer resten av denne metoden.
+                // TODO: Implementer resten av denne metoden.
             }
         }
 
@@ -233,7 +231,6 @@ namespace BlueCone.Bluetooth
             Connection newConnection = new Connection(address, newLink);
             connections.Add(newLink, newConnection);
             Debug.Print("WT32: Connection received from " + address + ", Link : " + link + ".");
-            BlueConePlayer.SendTracks(newConnection);
         }
 
         /// <summary>
