@@ -77,7 +77,7 @@ namespace BlueCone.Mp3
             USBHostController.DeviceConnectedEvent += new USBH_DeviceConnectionEventHandler(DeviceConnected);
             RemovableMedia.Eject += new EjectEventHandler(RemovableMedia_Eject);
             RemovableMedia.Insert += new InsertEventHandler(RemovableMedia_Insert);
-
+            
             Debug.Print("BlueConePlayer: Initialized.");
         }
 
@@ -132,7 +132,6 @@ namespace BlueCone.Mp3
                 if (sendAll)
                 {
                     int totalFiles = DirectoryEx.GetTotalFiles(volInfo.RootDirectory);
-
                     Debug.Print("BlueConePlayer: Sending " + totalFiles + " tracks to link " + connection.Link);
                     connection.SendMessage("LISTSTART#" + totalFiles);
                     FileStream fs = new FileStream("\\SD\\fileinfo.txt", FileMode.Open, FileAccess.Read, FileShare.None, 512);
@@ -163,41 +162,41 @@ namespace BlueCone.Mp3
         public static string ReadLineEx(StreamReader sr)
         {
             int newChar = 0;
-            int bufLen = 512; // NOTE: the smaller buffer size.
-            char[] readLineBuff = new char[bufLen];
+            int bufLength = 512; 
+            char[] readLineBuff = new char[bufLength];
             int growSize = 512;
-            int curPos = 0;
+            int currentPosition = 0;
             while ((newChar = sr.Read()) != -1)
             {
-                if (curPos == bufLen)
+                if (currentPosition == bufLength)
                 {
-                    if ((bufLen + growSize) > 0xffff)
+                    if ((bufLength + growSize) > 0xffff)
                     {
                         throw new Exception();
                     }
-                    char[] tempBuf = new char[bufLen + growSize];
-                    Array.Copy(readLineBuff, 0, tempBuf, 0, bufLen);
+                    char[] tempBuf = new char[bufLength + growSize];
+                    Array.Copy(readLineBuff, 0, tempBuf, 0, bufLength);
                     readLineBuff = tempBuf;
-                    bufLen += growSize;
+                    bufLength += growSize;
                 }
-                readLineBuff[curPos] = (char)newChar;
-                if (readLineBuff[curPos] == '\n')
+                readLineBuff[currentPosition] = (char)newChar;
+                if (readLineBuff[currentPosition] == '\n')
                 {
-                    return new string(readLineBuff, 0, curPos);
+                    return new string(readLineBuff, 0, currentPosition);
                 }
-                if (readLineBuff[curPos] == '\r')
+                if (readLineBuff[currentPosition] == '\r')
                 {
                     if (sr.Peek() == 10)
                     {
                         sr.Read();
                     }
-                    return new string(readLineBuff, 0, curPos);
+                    return new string(readLineBuff, 0, currentPosition);
                 }
-                curPos++;
+                currentPosition++;
             }
 
-            if (curPos == 0) return null; // Null fix.
-            return new string(readLineBuff, 0, curPos);
+            if (currentPosition == 0) return null; // Null fix.
+            return new string(readLineBuff, 0, currentPosition);
         }
         #endregion
 
